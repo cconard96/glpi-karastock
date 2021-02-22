@@ -39,8 +39,8 @@ if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
-class PluginKarastockProfile extends Profile
-{
+class PluginKarastockProfile extends Profile {
+
     static $rightname = "profile";
 
     // --------------------------------------------------------------------
@@ -55,8 +55,7 @@ class PluginKarastockProfile extends Profile
      *
      * @return boolean
      */
-    public static function install(Migration $migration, $version)
-    {
+    public static function install(Migration $migration, $version) {
         self::initProfile();
     }
 
@@ -65,8 +64,7 @@ class PluginKarastockProfile extends Profile
      *
      * @return boolean
      */
-    public static function uninstall()
-    {
+    public static function uninstall() {
         global $DB;
 
         // Delete rights associated with the plugin
@@ -91,8 +89,8 @@ class PluginKarastockProfile extends Profile
     // --------------------------------------------------------------------
 
     //! @copydoc CommonGLPI::displayTabContentForItem($item, $tabnum, $withtemplate)
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-    {
+    static function displayTabContentForItem(CommonGLPI $item, 
+    $tabnum = 1, $withtemplate = 0) {
         if ($item->getType() == Profile::class) {
 
             // Get the profile ID
@@ -106,8 +104,7 @@ class PluginKarastockProfile extends Profile
     }
 
     //! @copydoc CommonGLPI::getTabNameForItem($item, $withtemplate)
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-    {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
         if ($item->getType() == Profile::class) {
 
             if ($item->getField('id')
@@ -126,8 +123,7 @@ class PluginKarastockProfile extends Profile
      * @param Integer $ID
      * @param Array $options
      */
-    public function showForm($ID, $options = [])
-    {
+    public function showForm($ID, $options = []) {
         $profile = new Profile();
 
         if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))) {
@@ -166,8 +162,7 @@ class PluginKarastockProfile extends Profile
      * 
      * @return Array $rights
      */
-    public static function getAllRights($all = false)
-    {
+    public static function getAllRights($all = false) {
         $rights = [
             
         ];
@@ -179,10 +174,8 @@ class PluginKarastockProfile extends Profile
      * Remove all rights from the session global variable for the 
      * active profile
      */
-    public static function removeRightsFromSession()
-    {
+    public static function removeRightsFromSession() {
         foreach (self::getAllRights(true) as $right) {
-
             if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
                 unset($_SESSION['glpiactiveprofile'][$right['field']]);
             }
@@ -193,8 +186,7 @@ class PluginKarastockProfile extends Profile
      * Initialize rights on the active profile.
      * This method is called on the 'change_profile' hook
      */
-    public static function initProfile()
-    {
+    public static function initProfile() {
         global $DB;
 
         $profile = new self();

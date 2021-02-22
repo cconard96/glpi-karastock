@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_KARASTOCK_VERSION', '1.0.3');
+define('PLUGIN_KARASTOCK_VERSION', '1.0.4');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_KARASTOCK_MIN_GLPI", "9.5");
@@ -50,9 +50,7 @@ function plugin_init_karastock() {
       Plugin::registerClass('PluginKarastockProfile', array('addtabon' => array('Profile')));
       
       // Init current profile
-      $PLUGIN_HOOKS['change_profile']['karastock'] = ['PluginKarastockProfile', 'initProfile'];
-
-      
+      $PLUGIN_HOOKS['change_profile']['karastock'] = ['PluginKarastockProfile', 'initProfile'];      
    }
 }
 
@@ -65,7 +63,7 @@ function plugin_init_karastock() {
  */
 function plugin_version_karastock() {
    return [
-      'name'           => 'Stock Management (Karastock)',
+      'name'           => 'Stock & Orders Management (Karastock)',
       'version'        => PLUGIN_KARASTOCK_VERSION,
       'author'         => '<a href="http://www.phoen-ix.fr">Karhel</a>',
       'license'        => 'GPLV3+',

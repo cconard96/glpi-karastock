@@ -26,12 +26,31 @@
  --------------------------------------------------------------------------
  */
 
+function plugin_karastock_classes()
+{
+    return [
+        'Profile',
+    ];
+}
+
 /**
  * Plugin install process
  *
  * @return boolean
  */
 function plugin_karastock_install() {
+   
+   $migration = new Migration(PLUGIN_DPOREGISTER_VERSION);
+   $classesToInstall = plugin_karastock_classes();
+
+   foreach ($classesToInstall as $className) {
+
+       require_once('inc/' . strtolower($className) . '.class.php');
+
+       $fullclassname = 'PluginKarastock' . $className;
+       $fullclassname::install($migration, PLUGIN_DPOREGISTER_VERSION);
+   }
+
    return true;
 }
 
@@ -41,5 +60,15 @@ function plugin_karastock_install() {
  * @return boolean
  */
 function plugin_karastock_uninstall() {
+   $classesToUninstall = plugin_karastock_classes();
+
+   foreach ($classesToUninstall as $className) {
+
+       require_once('inc/' . strtolower($className) . '.class.php');
+
+       $fullclassname = 'PluginKarastock' . $className;
+       $fullclassname::uninstall();
+   }
+
    return true;
 }
