@@ -4,25 +4,25 @@
  * Karastock plugin for GLPI
  * Copyright (C) 2020 by the Karastock Development Team.
  *
- * https://github.com/pluginsGLPI/newdporegister
+ * https://github.com/pluginsGLPI/Karastock
  * -------------------------------------------------------------------------
  *
  * LICENSE
  *
- * This file is part of NewDpoRegister.
+ * This file is part of Karastock.
  *
- * NewDpoRegister is free software; you can redistribute it and/or modify
+ * Karastock is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  * 
- * NewDpoRegister is distributed in the hope that it will be useful,
+ * Karastock is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with NewDpoRegister. If not, see <http://www.gnu.org/licenses/>.
+ * along with Karastock. If not, see <http://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------
  * 
  * @package   Karastock
@@ -68,22 +68,40 @@ class PluginKarastockOrder extends CommonDBTM {
             $migration->displayMessage(sprintf(__("Installing %s"), $table));
             $query = "CREATE TABLE `$table` (
                 `id` int(11) NOT NULL auto_increment,
-                `number` varchar(255) collate utf8_unicode_ci default NULL,
+                `entities_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_entities (id)',
+
+                `status` int(11) NOT NULL default '1',                
+                `name` varchar(255) collate utf8_unicode_ci default NULL,
+
+                `other_identifier` varchar(255) collate utf8_unicode_ci default NULL,
                 `date` datetime default NULL,
                 `suppliers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_suppliers (id)',
+
+                `is_received` tinyint(1) NOT NULL default '0',
+                `bill_received` tinyint(1) NOT NULL default '0',
                 
                 PRIMARY KEY  (`id`),
-                KEY `number` (`number`)
+                KEY `status` (`status`),
+                KEY `name` (`name`)
             ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
+            
+            // Insert default display preferences for Processing objects
+            $query = "INSERT INTO `glpi_displaypreferences` (`itemtype`, `num`, `rank`, `users_id`) VALUES
+            ('" . __class__ . "', 1, 1, 0),
+            ('" . __class__ . "', 2, 2, 0),
+            ('" . __class__ . "', 3, 3, 0),
+            ('" . __class__ . "', 4, 4, 0)";
+
+            $DB->query($query) or die("populating display preferences " . $DB->error());
         }
 
         return true;
     }
 
     /**
-     * Uninstall PluginDporegisterProcessing
+     * Uninstall PluginKarastockOrder
      *
      * @return boolean
      */
@@ -126,6 +144,12 @@ class PluginKarastockOrder extends CommonDBTM {
     {
         return _n('Order', 'Orders', $nb, 'karastock');
     }
+
+    //! @copydoc CommonDBTM::getIcon()
+    static function getIcon()
+    {
+        return "fas fa-shopping-cart";
+    }
     
     //! @copydoc CommonGLPI::defineTabs($options)
     public function defineTabs($options = array())
@@ -134,6 +158,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
         $this->addDefaultFormTab($ong)
             ->addStandardTab(__class__, $ong, $options)
+            ->addStandardTab('PluginKarastockOrderItem_Order', $ong, $options)
             ->addStandardTab('Notepad', $ong, $options)
             ->addStandardTab('Log', $ong, $options);
 
@@ -158,13 +183,13 @@ class PluginKarastockOrder extends CommonDBTM {
             'field' => 'id',
             'name' => __('ID'),
             'massiveaction' => false,
-            'datatype' => 'number'
+            'datatype' => 'name'
         ];
 
         $tab[] = [
             'id' => '2',
             'table' => $this->getTable(),
-            'field' => 'number',
+            'field' => 'name',
             'name' => __('Order Number', 'karastock'),
             'datatype' => 'itemlink',
             'searchtype' => 'contains',
@@ -173,6 +198,16 @@ class PluginKarastockOrder extends CommonDBTM {
 
         $tab[] = [
             'id' => '3',
+            'table' => 'glpi_suppliers',
+            'field' => 'name',
+            'name' => __('Supplier'),
+            'datatype' => 'dropdown',
+            'searchtype' => 'equals',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '4',
             'table' => $this->getTable(),
             'field' => 'date',
             'name' => __('Order date', 'karastock'),
@@ -181,13 +216,21 @@ class PluginKarastockOrder extends CommonDBTM {
         ];
 
         $tab[] = [
-            'id' => '4',
-            'table' => 'glpi_suppliers',
-            'field' => 'name',
-            'name' => __('Supplier'),
-            'datatype' => 'dropdown',
-            'searchtype' => 'equals',
-            'massiveaction' => false
+            'id' => '5',
+            'table' => $this->getTable(),
+            'field' => 'is_received',
+            'name' => __('Received', 'karastock'),
+            'datatype' => 'bool',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '6',
+            'table' => $this->getTable(),
+            'field' => 'bill_received',
+            'name' => __('Bill received', 'karastock'),
+            'datatype' => 'bool',
+            'massiveaction' => true
         ];
 
         return $tab;
@@ -224,31 +267,45 @@ class PluginKarastockOrder extends CommonDBTM {
             );
         }
 
-        $options['formfooter'] = false;
+        $options['formfooter'] = true;
 
         $this->initForm($ID, $options);
         $this->showFormHeader($options);
 
         echo "<tr class='tab_bg_1'>";
-        echo "<th width='$colsize1'>" . __('Order number', 'karastock') . "</th>";
+        echo "<th width='$colsize1'>" . __('Order Number', 'karastock') . "</th>";
         echo "<td width='$colsize2%'>";
-        $title = Html::cleanInputText($this->fields["number"]);
+        $number = Html::cleanInputText($this->fields["name"]);
         if ($canUpdate) {
             echo sprintf(
-                "<input type='text' style='width:98%%' maxlength=250 name='number' required value=\"%1\$s\"/>",
-                $title
+                "<input type='text' style='width:98%%' maxlength=250 name='name' required value=\"%1\$s\"/>",
+                $number
             );
         } else {
-            echo Toolbox::getHtmlToDisplay($title);
+            echo Toolbox::getHtmlToDisplay($number);
         }
+        echo "</td><th width='$colsize1'>" . __('Other ID', 'karastock') . "</th>";
+        echo "<td width='$colsize2%'>";
+        $otherid = Html::cleanInputText($this->fields["other_identifier"]);
+        if ($canUpdate) {
+            echo sprintf(
+                "<input type='text' style='width:98%%' maxlength=250 name='other_identifier' value=\"%1\$s\"/>",
+                $otherid
+            );
+        } else {
+            echo Toolbox::getHtmlToDisplay($otherid);
+        }
+        echo "</td></tr>";
 
-        echo "</td><th width='$colsize1'>" . __('Supplier') . "</th>";
+
+        echo "<th width='$colsize1'>" . __('Supplier') . "</th>";
         echo "<td width='$colsize2%'>";
         Supplier::dropdown([
             'name' => 'suppliers_id',
             'value' => $this->fields['suppliers_id'],
             'required' => true
         ]);
+
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -256,18 +313,27 @@ class PluginKarastockOrder extends CommonDBTM {
         echo "<td width='$colsize2%'>";
         $date = $this->fields["date"];
         if ($canUpdate) {
-            Html::showDateTimeField('date', [
+            Html::showDateField('date', [
                 'value' => $date,
-                'required' => true
+                'required' => !$ID
             ]);
         } else {
             echo Html::convDateTime($date);
         }
 
-        echo "</td><th width='$colsize1'>" . __('Supplier') . "</th>";
-        echo "<td width='$colsize2%'>";
-
         echo "</td></tr>";
+
+        if ($ID) {
+            
+            echo "<tr class='tab_bg_1'>";
+            echo "<th width='$colsize1'>" . __('Received', 'karastock') . "</th>";
+            echo "<td width='$colsize2%'>";
+            Dropdown::showYesNo('is_received', $this->fields['is_received']);
+            echo "</td><th width='$colsize1'>" . __('Bill received', 'karastock') . "</th>";
+            echo "<td width='$colsize2%'>";
+            Dropdown::showYesNo('bill_received', $this->fields['bill_received']);
+            echo "</td></tr>";
+        }
         
         $this->showFormButtons($options);
     }

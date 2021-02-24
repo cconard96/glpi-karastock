@@ -31,6 +31,8 @@ function plugin_karastock_classes()
     return [
         'Profile',
         'Order',
+        'OrderItem',
+        'OrderItem_Order'
     ];
 }
 
@@ -41,7 +43,7 @@ function plugin_karastock_classes()
  */
 function plugin_karastock_install() {
    
-   $migration = new Migration(PLUGIN_DPOREGISTER_VERSION);
+   $migration = new Migration(PLUGIN_KARASTOCK_VERSION);
    $classesToInstall = plugin_karastock_classes();
 
    foreach ($classesToInstall as $className) {
@@ -49,7 +51,7 @@ function plugin_karastock_install() {
        require_once('inc/' . strtolower($className) . '.class.php');
 
        $fullclassname = 'PluginKarastock' . $className;
-       $fullclassname::install($migration, PLUGIN_DPOREGISTER_VERSION);
+       $fullclassname::install($migration, PLUGIN_KARASTOCK_VERSION);
    }
 
    return true;
