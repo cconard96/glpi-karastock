@@ -30,6 +30,7 @@ function plugin_karastock_classes()
 {
     return [
         'Profile',
+        'Order',
     ];
 }
 

@@ -164,7 +164,20 @@ class PluginKarastockProfile extends Profile {
      */
     public static function getAllRights($all = false) {
         $rights = [
-            
+            [
+                'itemtype' => PluginKarastockOrder::class,
+                'label' => PluginKarastockOrder::getTypeName(2),
+                'field' => PluginKarastockOrder::$rightname,
+                'rights' => [
+                    CREATE => __('Create'),
+                    READ => __('Read'),
+                    UPDATE => __('Update'),
+                    DELETE => __('Delete'),
+                    PURGE => __('Delete permanently'),
+                    READNOTE => __('Read notes'),
+                    UPDATENOTE => __('Update notes'),
+                ]
+            ]
         ];
 
         return $rights;
