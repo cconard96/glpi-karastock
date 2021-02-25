@@ -2,8 +2,8 @@
    <name>KaraStock</name>
    <key>karastock</key>
    <!-- stable, beta, development, alpha, ... -->
-   <state>dev</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/karastock/master/{LNAME}.png</logo>
+   <state>development</state>
+   <logo>https://raw.githubusercontent.com/karhel/glpi-karastock/master/{LNAME}.png</logo>
    <description>
       <short>
          <!-- Add as many lang tag you want -->
@@ -16,10 +16,10 @@
          <fr>Gestionnaire de stock et de commande (réception, affectation et sortie de stock)</fr>
       </long>
    </description>
-   <homepage>https://github.com/pluginsGLPI/karastock</homepage>
-   <download>https://github.com/pluginsGLPI/karastock/releases</download>
-   <issues>https://github.com/pluginsGLPI/karastock/issues</issues>
-   <readme>https://github.com/pluginsGLPI/karastock/blob/master/README.md</readme>
+   <homepage>https://github.com/karhel/glpi-karastock</homepage>
+   <download>https://github.com/karhel/glpi-karastock/releases</download>
+   <issues>https://github.com/karhel/glpi-karastock/issues</issues>
+   <readme>https://github.com/karhel/glpi-karastock/blob/master/README.md</readme>
    <authors>
       <!-- Add as many author tag you want -->
       <author>Karhel Tmarr</author>
@@ -41,7 +41,7 @@
       <lang>fr_FR</lang>
    </langs>
    <license>GPL V3+</license>
-   <!--tags>
+   <tags>
       <en>
          <tag>One tag</tag>
          <tag>Another tag</tag>
@@ -50,9 +50,9 @@
          <tag>Un tag</tag>
          <tag>Un autre tag</tag>
       </fr>
-   </tags-->
-   <!--screenshots>
+   </tags>
+   <screenshots>
       <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot.png</screenshot>
       <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot2.png</screenshot>
-   </screenshots-->
+   </screenshots>
 </root>
