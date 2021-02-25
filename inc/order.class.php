@@ -73,6 +73,8 @@ class PluginKarastockOrder extends CommonDBTM {
                 `status` int(11) NOT NULL default '1',                
                 `name` varchar(255) collate utf8_unicode_ci default NULL,
 
+                `number` varchar(255) collate utf8_unicode_ci default NULL, 
+
                 `other_identifier` varchar(255) collate utf8_unicode_ci default NULL,
                 `date` datetime default NULL,
                 `suppliers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_suppliers (id)',
@@ -158,7 +160,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
         $this->addDefaultFormTab($ong)
             ->addStandardTab(__class__, $ong, $options)
-            ->addStandardTab('PluginKarastockOrderItem_Order', $ong, $options)
+            ->addStandardTab(PluginKarastockOrderItem::class, $ong, $options)
             ->addStandardTab('Notepad', $ong, $options)
             ->addStandardTab('Log', $ong, $options);
 

@@ -32,7 +32,6 @@ function plugin_karastock_classes()
         'Profile',
         'Order',
         'OrderItem',
-        'OrderItem_Order'
     ];
 }
 
