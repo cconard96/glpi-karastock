@@ -68,7 +68,6 @@ class PluginKarastockOrder extends CommonDBTM {
             $migration->displayMessage(sprintf(__("Installing %s"), $table));
             $query = "CREATE TABLE `$table` (
                 `id` int(11) NOT NULL auto_increment,
-                `entities_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_entities (id)',
 
                 `status` int(11) NOT NULL default '1',                
                 `name` varchar(255) collate utf8_unicode_ci default NULL,
@@ -94,7 +93,9 @@ class PluginKarastockOrder extends CommonDBTM {
             ('" . __class__ . "', 1, 1, 0),
             ('" . __class__ . "', 2, 2, 0),
             ('" . __class__ . "', 3, 3, 0),
-            ('" . __class__ . "', 4, 4, 0)";
+            ('" . __class__ . "', 4, 4, 0),
+            ('" . __class__ . "', 5, 5, 0),
+            ('" . __class__ . "', 6, 6, 0)";
 
             $DB->query($query) or die("populating display preferences " . $DB->error());
         }
@@ -204,7 +205,7 @@ class PluginKarastockOrder extends CommonDBTM {
             'field' => 'name',
             'name' => __('Supplier'),
             'datatype' => 'dropdown',
-            'searchtype' => 'equals',
+            'searchtype' => ['equals', 'notequals'],
             'massiveaction' => true
         ];
 
@@ -234,6 +235,11 @@ class PluginKarastockOrder extends CommonDBTM {
             'datatype' => 'bool',
             'massiveaction' => true
         ];
+
+        $tab = array_merge(
+            $tab,
+            PluginKarastockOrderItem::rawSearchOptionsToAdd()
+        );
 
         return $tab;
     }

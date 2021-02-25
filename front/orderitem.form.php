@@ -48,9 +48,7 @@ if (isset($_POST["add"])) {
     Html::back();
 }
 else if(isset($_POST["update"])) {
-    
-    $orderitem = new PluginKarastockOrderItem();
-    $orderitem->update($_POST);   
 
+    PluginKarastockOrderItem::updateFromPOST($_POST);
     Html::back();
 }

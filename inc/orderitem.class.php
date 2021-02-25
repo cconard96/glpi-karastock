@@ -78,9 +78,9 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 `".self::$items_id."` int,
                 `type` varchar(255) collate utf8_unicode_ci default NULL,  
                 `model` varchar(255) collate utf8_unicode_ci default NULL, 
-                `cost` decimal NOT NULL default 0, 
+                `cost` varchar(255) collate utf8_unicode_ci default NULL, 
                 `tickets_id` int(11) NOT NULL default 0, 
-                `is_used` int(1) NOT NULL default 0,                             
+                `out_of_stock` int(1) NOT NULL default 0,
 
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -166,6 +166,154 @@ class PluginKarastockOrderItem extends CommonDBChild {
         return true;
     }  
 
+    //! @copydoc CommonDBTM::rawSearchOptions()
+    function rawSearchOptions()
+    {
+        global $CFG_GLPI;
+
+        $tab = [];
+
+        $tab[] = [
+            'id' => 'common',
+            'name' => __('Characteristics')
+        ];
+
+        $tab[] = [
+            'id' => '1',
+            'table' => $this->getTable(),
+            'field' => 'id',
+            'name' => __('ID'),
+            'massiveaction' => false,
+            'datatype' => 'number'
+        ];
+
+        $tab[] = [
+            'id' => '2',
+            'table' => $this->getTable(),
+            'field' => 'type',
+            'name' => __('Type'),
+            'searchtype' => ['equals', 'notequals'],
+            'datatype' => 'specific',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '3',
+            'table' => $this->getTable(),
+            'field' => 'model',
+            'name' => __('Model'),
+            'searchtype' => 'contains',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '4',
+            'table' => $this->getTable(),
+            'field' => 'out_of_stock',
+            'name' => __('Is out of stock', 'karastock'),
+            'datatype' => 'bool',
+            'searchtype' => 'equal',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '5',
+            'table' => $this->getTable(),
+            'field' => 'cost',
+            'name' => __('Cost'),
+            'searchtype' => 'equal',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '6',
+            'table' => $this->getTable(),
+            'field' => 'tickets_id',
+            'name' => __('Ticket'),
+            'searchtype' => 'specific',
+            'massiveaction' => true
+        ];
+
+        return $tab;
+    }
+
+    //! @copydoc CommonDBTM::getValueToSelect($field_id_or_search_options, $name, $value, $options)
+    function getValueToSelect(
+        $field_id_or_search_options,
+        $name = '',
+        $values = '',
+        $options = array()
+    ) {
+        switch ($field_id_or_search_options['table'] . '.' . $field_id_or_search_options['field']) {
+
+            case $this->getTable() . '.type':
+                $options['display'] = false;
+                return self::dropdownOrderItemType($name, $options);
+            case $this->getTable() . '.tickets_id':
+                $options['display'] = false;
+                return Ticket::dropdown([                    
+                    'displaywith' => ['id'],
+                    'condition'   => Ticket::getOpenCriteria(),
+                ]);
+
+            default:
+                return parent::getValueToSelect($field_id_or_search_options, $name, $values, $options);
+        }
+    }
+
+    
+    /**
+     * 
+     */
+    public static function rawSearchOptionsToAdd()
+    {
+        $tab = [];
+
+        $tab[] = [
+            'id' => '22',
+            'table' => self::getTable(),
+            'field' => 'out_of_stock',
+            'name' => __('Is out of stock', 'karastock'),
+            'forcegroupby' => true,
+            'massiveaction' => false,
+            'datatype' => 'bool',
+            'searchtype' => ['equals', 'notequals']
+        ];
+
+        return $tab;
+    }
+
+    /**
+     * Show (or retreive) the dropdown about the Item types
+     * 
+     * @param String $name Name for the form input
+     * @param Array $options
+     * 
+     * @return String
+     * @see self::getPiastatus
+     */
+    static function dropdownOrderItemType($name, $options = [])
+    {
+        $params['value'] = 0;
+        $params['toadd'] = [];
+        $params['on_change'] = '';
+        $params['display'] = true;
+
+        if (is_array($options) && count($options)) {
+            foreach ($options as $key => $val) {
+                $params[$key] = $val;
+            }
+        }
+
+        $items = [];
+        if (count($params['toadd']) > 0) {
+            $items = $params['toadd'];
+        }
+
+        $items += Ticket::getAllTypesForHelpdesk();
+        return Dropdown::showFromArray($name, $items, $params);
+    }
+
     /**
      * Show the tab content for the Order Object
      * 
@@ -242,15 +390,13 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $header_end .= "<th class='center'>" . __('Type') . "</th>";
             $header_end .= "<th class='center'>" . __('Model') . "</th>";
             $header_end .= "<th class='center'>" . __('Cost') . "</th>";
-            $header_end .= "<th class='center'>" . __('Is used', 'karastock') . "</th>";
+            $header_end .= "<th class='center'>" . __('Is out of stock', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Ticket') . "</th>";
             echo $header_begin . $header_top . $header_end . "</tr>";
 
             while ($data = $DB->fetch_assoc($result)) {
 
-                echo "<tr class='tab_bg_1'" . ($canedit ?
-                "style='cursor:pointer' onClick=\"viewEditOrderItem" . $orderId . "_" . $data['id'] . "_$rand()\""
-                : '') . ">";
+                echo "<tr class='tab_bg_1'>";
 
                 if ($canedit) {
                     echo "<td width='10'>";
@@ -258,11 +404,23 @@ class PluginKarastockOrderItem extends CommonDBChild {
                     echo "</td>";                    
                 }
 
-                echo "<td class='center'>" .  __($data['type']) . "</td>";
+                echo "<td class='center'" . ($canedit ?
+                "style='cursor:pointer' onClick=\"viewEditOrderItem" . $orderId . "_" . $data['id'] . "_$rand()\""
+                : '') . ">" .  __($data['type']) . "</td>";
                 echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['cost'] . "</td>";
-                echo "<td class='center'>" . ($data['is_used'] == 1 ? __('Yes') : __('No')) . "</td>";
-                echo "<td class='center'><a href=''>" . $data['tickets_id'] . "</a></td>";
+                echo "<td class='center'>" . ($data['out_of_stock'] == 1 ? __('Yes') : __('No')) . "</td>";
+
+
+                echo "<td class='center'>";
+                $ticketId = $data['tickets_id'];
+                if($ticketId > 0) {
+                    $ticket = new Ticket();
+                    $ticket->getFromDB($ticketId);
+
+                    echo "<a href='". $ticket->getLinkURL() ."'>" . $ticketId . "</a>";
+                }
+                echo "</td>";
 
                 if ($canedit) {
                     echo "\n<script type='text/javascript' >\n";
@@ -303,6 +461,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
     public static function showAddForm($orderId) {
 
         $types = Ticket::getAllTypesForHelpdesk();
+        $item = new self();
 
         $colsize1 = '13';
         $colsize2 = '29';
@@ -331,18 +490,22 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Model', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField(new PluginKarastockOrderItem(), 'model');
+        Html::autocompletionTextField($item, 'model', [
+            'rand' => $rand
+        ]);
         echo "</td></tr>";
 
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Cost', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField(new PluginKarastockOrderItem(), 'cost');
+        Html::autocompletionTextField($item, 'cost', [
+            'rand' => $rand
+        ]);
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Count', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Dropdown::showNumber('count', ['min'   => 1, 'max'   => 100]);
+        Dropdown::showNumber('count', ['min'   => 1, 'max'   => 100, 'rand' => $rand]);
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";        
@@ -426,8 +589,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
-        echo "<td class='left' width='$colsize1%'><label>" . __('Is Used') . "</label></td><td width='$colsize2%'>";
-        Dropdown::showYesNo('is_used', $this->fields['is_used']);
+        echo "<td class='left' width='$colsize1%'><label>" . __('Is out of stock') . "</label></td><td width='$colsize2%'>";
+        Dropdown::showYesNo('out_of_stock', $this->fields['out_of_stock']);
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";        
@@ -438,6 +601,16 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "</table>";
         Html::closeForm();
         echo "</div>";  
+    }
+
+    public static function updateFromPOST($POST) {       
+    
+        $orderitem = new self();
+        if($_POST["tickets_id"] <= 0) {
+            unset($_POST["tickets_id"]);
+        }
+
+        $orderitem->update($_POST);  
     }
 }
 
