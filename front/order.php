@@ -41,7 +41,8 @@ Html::header(
     __('Karastock', 'karastock'),
     $_SERVER['PHP_SELF'],
     'management',
-    'PluginKarastockOrder'
+    'PluginKarastockMenu',
+    'orders'    
 );
 
 (new PluginKarastockOrder)->checkGlobal(READ);

@@ -53,8 +53,9 @@ function plugin_init_karastock() {
       $PLUGIN_HOOKS['change_profile']['karastock'] = ['PluginKarastockProfile', 'initProfile'];   
       
       // Register Order class and add menu
-      Plugin::registerClass('PluginKarastockOrder');
-      $PLUGIN_HOOKS["menu_toadd"]['karastock'] = ['management' => 'PluginKarastockOrder'];
+
+      Plugin::registerClass('PluginKarastockMenu');
+      $PLUGIN_HOOKS["menu_toadd"]['karastock'] = ['management' => 'PluginKarastockMenu'];
    }
 }
 

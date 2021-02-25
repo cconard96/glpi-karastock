@@ -35,72 +35,34 @@
  * --------------------------------------------------------------------------
  */
 
+
 include("../../../inc/includes.php");
-Plugin::load('karastock', true);
 
-if (!isset($_GET["id"])) {
-    $_GET["id"] = "";
-}
+Html::header(
+    __('Karastock', 'karastock'),
+    $_SERVER['PHP_SELF'],
+    'management',
+    'PluginKarastockMenu'
+);
 
-$order = new PluginKarastockOrder();
+(new PluginKarastockOrder)->checkGlobal(READ);
 
-if (isset($_POST["add"])) {
+$pluginKarastockOrder = new PluginKarastockOrder();
 
-    // Check CREATE ACL
-    $order->check(-1, CREATE, $_POST);
+echo "<div class='center'>";
+echo "<table class='tab_cadre'>";
+echo "<tr><th colspan='2'>" . __("Stock management", "karastock") . "</th></tr>";
 
-    // Do object add
-    $order->add($_POST);
-    
-    // Redirect to object form
-    Html::back();
+echo "<tr class='tab_bg_1 center'>";
+echo "<td></td>";
+echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockOrder')."'>" .
+__("Orders", "karastock") . "</a></td></tr>";
 
-} else if (isset($_POST['update'])) {
-    
-    // Check UPDATE ACL
-    $order->check($_POST['id'], UPDATE);
 
-    // Do object update
-    $order->update($_POST);
-    
-    // Redirect to object form
-    Html::back();
+echo "<tr class='tab_bg_1 center'>";
+echo "<td></td>";
+echo "<td><a href='".''."'>" .
+__("Stock", "karastock") . "</a></td></tr>";
 
-} else if (isset($_POST['delete'])) { // Put in trash
-
-    // Check DELETE ACL
-    $order->check($_POST['id'], DELETE);
-
-    // Do object delete (trash)
-    $order->delete($_POST);
-
-    // Redirect to objects list
-    $order->redirectToList();
-
-} else if (isset($_POST['purge'])) {
-
-    // Check PURGE ACL
-    $order->check($_POST['id'], PURGE);
-
-    // Do permanently delete
-    $order->purge($_POST);    
-
-    // Redirect to objects list
-    $order->redirectToList();
-
-} else {
-
-    // Display the objects list
-
-    Html::header(
-        __('Karastock', 'karastock'),
-        $_SERVER['PHP_SELF'],
-        'management',
-        'PluginKarastockMenu',
-        'orders'    
-    );
-
-    $order->display(['id' => $_GET["id"]]);
-
-    Html::footer();
-}
+echo "</table></div>";
+Html::footer();
