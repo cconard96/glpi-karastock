@@ -1,19 +1,19 @@
 <root>
-   <name>karastock</name>
+   <name>KaraStock</name>
    <key>karastock</key>
    <!-- stable, beta, development, alpha, ... -->
-   <state>stable</state>
+   <state>dev</state>
    <logo>https://raw.githubusercontent.com/pluginsGLPI/karastock/master/{LNAME}.png</logo>
    <description>
       <short>
          <!-- Add as many lang tag you want -->
-         <en>karastock GLPI plugin.</en>
-         <fr>Plugin GLPI karastock</fr>
+         <en>Karastock GLPI Plugin</en>
+         <fr>Karastock GLPI Plugin</fr>
       </short>
       <long>
          <!-- Add as many lang tag you want -->
          <en>A long description for karastock GLPI plugin.</en>
-         <fr>Un description longue pour le plugin GLPI karastock</fr>
+         <fr>Gestionnaire de stock et de commande (réception, affectation et sortie de stock)</fr>
       </long>
    </description>
    <homepage>https://github.com/pluginsGLPI/karastock</homepage>
@@ -22,13 +22,14 @@
    <readme>https://github.com/pluginsGLPI/karastock/blob/master/README.md</readme>
    <authors>
       <!-- Add as many author tag you want -->
-      <author>Teclib'</author>
+      <author>Karhel Tmarr</author>
    </authors>
    <versions>
       <!-- Add as many version tag you want -->
       <version>
-         <num>1.0</num>
+         <num>0.0.7</num>
          <!-- Add as many compatibility tag you want -->
+         <compatibility>9.5</compatibility>
          <compatibility>9.4</compatibility>
          <compatibility>9.3</compatibility>
          <compatibility>9.2</compatibility>

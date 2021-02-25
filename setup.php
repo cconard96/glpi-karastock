@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_KARASTOCK_VERSION', '1.0.7');
+define('PLUGIN_KARASTOCK_VERSION', '0.0.7');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_KARASTOCK_MIN_GLPI", "9.5");
