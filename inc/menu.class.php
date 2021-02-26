@@ -77,7 +77,7 @@ class PluginKarastockMenu extends CommonGLPI {
     //! @copydoc CommonDBTM::getIcon()
     static function getIcon()
     {
-        return "fas fa-shopping-cart";
+        return "fas fa-cubes";
     } 
     
     static function getMenuContent() {
@@ -86,8 +86,16 @@ class PluginKarastockMenu extends CommonGLPI {
         $menu = [
             'title' => self::getTypeName(2),
             'page'  => self::getSearchURL(false),
-            'icon'  => PluginKarastockOrder::getIcon(),
+            'icon'  => self::getIcon(),
         ];
+
+        if(PluginKarastockStock::canView()) {
+            $menu['options']['stock'] = [
+                'title' => PluginKarastockStock::getTypeName(1),
+                'page'  => PluginKarastockStock::getSearchURL(false),
+                'icon'  => PluginKarastockStock::getIcon(),
+            ];
+        }
 
         if(PluginKarastockOrder::canView()) {
             $menu['options']['orders'] = [
@@ -99,7 +107,7 @@ class PluginKarastockMenu extends CommonGLPI {
             if (PluginKarastockOrder::canCreate()) {
                 $menu['options']['orders']['links'] = [
                    'search' => PluginKarastockOrder::getSearchURL(false),
-                   'add'    => '/plugins/karastock/front/order.form.php'
+                   'add'    => PluginKarastockOrder::getFormURL(false)
                 ];
              }
         }

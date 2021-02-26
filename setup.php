@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_KARASTOCK_VERSION', '0.0.7');
+define('PLUGIN_KARASTOCK_VERSION', '0.1.1');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_KARASTOCK_MIN_GLPI", "9.5");
@@ -53,7 +53,6 @@ function plugin_init_karastock() {
       $PLUGIN_HOOKS['change_profile']['karastock'] = ['PluginKarastockProfile', 'initProfile'];   
       
       // Register Order class and add menu
-
       Plugin::registerClass('PluginKarastockMenu');
       $PLUGIN_HOOKS["menu_toadd"]['karastock'] = ['management' => 'PluginKarastockMenu'];
    }

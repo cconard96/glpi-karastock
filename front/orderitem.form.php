@@ -44,10 +44,14 @@ if (!isset($_GET["id"])) {
 
 if (isset($_POST["add"])) {
 
+    (new PluginKarastockOrderItem)->checkGlobal(CREATE);
+
     PluginKarastockOrderItem::addItemsFromPOST($_POST);
     Html::back();
 }
 else if(isset($_POST["update"])) {
+
+    (new PluginKarastockOrderItem)->checkGlobal(UPDATE);
 
     PluginKarastockOrderItem::updateFromPOST($_POST);
     Html::back();

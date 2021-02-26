@@ -177,6 +177,14 @@ class PluginKarastockProfile extends Profile {
                     READNOTE => __('Read notes'),
                     UPDATENOTE => __('Update notes'),
                 ]
+            ],
+            [
+                'itemtype' => PluginKarastockStock::class,
+                'label' => PluginKarastockStock::getTypeName(1),
+                'field' => PluginKarastockStock::$rightname,
+                'rights' => [
+                    READ => __('Read'),
+                ]
             ]
         ];
 

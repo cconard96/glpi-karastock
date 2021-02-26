@@ -35,32 +35,29 @@
  * --------------------------------------------------------------------------
  */
 
-
 include("../../../inc/includes.php");
 
 Html::header(
     __('Karastock', 'karastock'),
     $_SERVER['PHP_SELF'],
     'management',
-    'PluginKarastockMenu'
+    'PluginKarastockMenu',
+    'stock'    
 );
 
-(new PluginKarastockOrder)->checkGlobal(READ);
+(new PluginKarastockStock)->checkGlobal(READ);
 
-echo "<div class='center'>";
-echo "<table class='tab_cadre'>";
-echo "<tr><th colspan='2'>" . __("Stock management", "karastock") . "</th></tr>";
+if (isset($_GET["model"]) && isset($_GET["type"])) {
 
-echo "<tr class='tab_bg_1 center'>";
-echo "<td></td>";
-echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockOrder')."'>" .
-__("Orders", "karastock") . "</a></td></tr>";
+    PluginKarastockStock::ShowModel($_GET["type"], $_GET["model"]);
 
+} else if (isset($_GET["type"])) {
+    
+    PluginKarastockStock::ShowType($_GET["type"]);
 
-echo "<tr class='tab_bg_1 center'>";
-echo "<td></td>";
-echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."'>" .
-__("Stock", "karastock") . "</a></td></tr>";
+} else {
+    
+    PluginKarastockStock::Show();
+}
 
-echo "</table></div>";
 Html::footer();
