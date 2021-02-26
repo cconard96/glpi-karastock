@@ -81,6 +81,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 `cost` varchar(255) collate utf8_unicode_ci default NULL, 
                 `tickets_id` int(11) NOT NULL default 0, 
                 `out_of_stock` int(1) NOT NULL default 0,
+                `comment` varchar(255) collate utf8_unicode_ci default NULL, 
 
                 PRIMARY KEY  (`id`)
             ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -231,6 +232,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
             'field' => 'tickets_id',
             'name' => __('Ticket'),
             'searchtype' => 'specific',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '7',
+            'table' => $this->getTable(),
+            'field' => 'comment',
+            'name' => __('Comment'),
+            'searchtype' => 'contains',
             'massiveaction' => true
         ];
 
@@ -392,6 +402,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $header_end .= "<th class='center'>" . __('Cost') . "</th>";
             $header_end .= "<th class='center'>" . __('Is out of stock', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Ticket') . "</th>";
+            $header_end .= "<th class='center'>" . __('Comment') . "</th>";
             echo $header_begin . $header_top . $header_end . "</tr>";
 
             while ($data = $DB->fetch_assoc($result)) {
@@ -421,6 +432,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
                     echo "<a href='". $ticket->getLinkURL() ."'>" . $ticketId . "</a>";
                 }
                 echo "</td>";
+
+                echo "<td class='center'>" . $data['comment'] . "</td>";
 
                 if ($canedit) {
                     echo "\n<script type='text/javascript' >\n";
@@ -591,6 +604,12 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Is out of stock') . "</label></td><td width='$colsize2%'>";
         Dropdown::showYesNo('out_of_stock', $this->fields['out_of_stock']);
+        echo "</td></tr>";
+
+        echo "</td></tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td class='left' width='$colsize1%'><label>" . __('Comment') . "</label></td><td width='$colsize2%'>";
+        Html::autocompletionTextField($this, 'comment');
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";        
