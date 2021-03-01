@@ -83,7 +83,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
                 `tickets_id` int(11) NOT NULL default 0, 
 
-                `out_of_stock` datetime default NULL,
+                `is_out_of_stock`  tinyint(1) default 0,
+                `out_of_stock_at` datetime default NULL,
 
                 `comment` varchar(255) collate utf8_unicode_ci default NULL, 
 
@@ -214,7 +215,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
         $tab[] = [
             'id' => '4',
             'table' => $this->getTable(),
-            'field' => 'out_of_stock',
+            'field' => 'is_out_of_stock',
             'name' => __('Is out of stock', 'karastock'),
             'datatype' => 'bool',
             'searchtype' => 'equal',
@@ -286,7 +287,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
         $tab[] = [
             'id' => '22',
             'table' => self::getTable(),
-            'field' => 'out_of_stock',
+            'field' => 'is_out_of_stock',
             'name' => __('Is out of stock', 'karastock'),
             'forcegroupby' => true,
             'massiveaction' => false,
@@ -424,8 +425,11 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 : '') . ">" .  self::getTypes(__($data['type'])) . "</td>";
                 echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['cost'] . "</td>";
-                echo "<td class='center'>" . ($data['out_of_stock'] == 1 ? __('Yes') : __('No')) . "</td>";
-
+                echo "<td class='center'>" . 
+                    ($data['is_out_of_stock'] == 1 ? 
+                        __('Yes at', 'karastock') . ' ' . Html::convDate($data['out_of_stock_at'])  :
+                        __('No')) . 
+                    "</td>";
 
                 echo "<td class='center'>";
                 $ticketId = $data['tickets_id'];
@@ -640,7 +644,26 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Is out of stock') . "</label></td><td width='$colsize2%'>";
-        Dropdown::showYesNo('out_of_stock', $this->fields['out_of_stock']);
+        $rand = Dropdown::showYesNo('is_out_of_stock', $this->fields['is_out_of_stock']);
+            $params = [
+                'is_out_of_stock' => '__VALUE__',
+                'out_of_stock_at' => $this->fields['out_of_stock_at']
+            ];
+
+            Ajax::updateItemOnSelectEvent(
+                "dropdown_is_out_of_stock$rand",
+                "out_of_stock_div",
+                "../ajax/datetime_dropdown.php",
+                $params
+            );
+
+            $opt = ['value' => $this->fields['out_of_stock_at']];
+            echo "<div id='out_of_stock_div'>";
+            if ($this->fields['is_out_of_stock']) { 
+                Html::showDateField('out_of_stock_at', $opt);
+            }
+            echo "</div>";
+
         echo "</td></tr>";
 
         echo "</td></tr>";

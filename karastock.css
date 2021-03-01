@@ -1,0 +1,7 @@
+
+div#out_of_stock_div,
+div#received_div,
+div#bill_received_div {
+    display: inline-block;
+    margin: 5px;
+}

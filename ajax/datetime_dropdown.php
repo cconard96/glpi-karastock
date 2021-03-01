@@ -35,7 +35,7 @@
  * --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'], "order_isreceived_dropdown.php")) {
+if (strpos($_SERVER['PHP_SELF'], "datetime_dropdown.php")) {
     $AJAX_INCLUDE = 1;
 
     include("../../../inc/includes.php");
@@ -51,10 +51,19 @@ if (array_key_exists('is_received', $_POST) && $_POST['is_received']) {
         ['value' => $_POST['received_at']]
     );
 }
-if (array_key_exists('is_bill_received', $_POST) && $_POST['is_bill_received']) {
+else if (array_key_exists('is_bill_received', $_POST) && $_POST['is_bill_received']) {
     
     Html::showDateField('bill_received_at', 
         ['value' => $_POST['bill_received_at']]
+    );
+}
+else if (array_key_exists('is_out_of_stock', $_POST) && $_POST['is_out_of_stock']) {
+    
+    Html::showDateField('out_of_stock_at', 
+        [
+            'value' => $_POST['out_of_stock_at'],
+            'required' => true
+        ]
     );
 }
 else { echo ''; }

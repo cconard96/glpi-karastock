@@ -367,7 +367,7 @@ class PluginKarastockOrder extends CommonDBTM {
             Ajax::updateItemOnSelectEvent(
                 "dropdown_is_received$rand",
                 "received_div",
-                "../ajax/order_isreceived_dropdown.php",
+                "../ajax/datetime_dropdown.php",
                 $params
             );
 
@@ -379,7 +379,8 @@ class PluginKarastockOrder extends CommonDBTM {
             echo "</div>";
             echo "</td><th width='$colsize1'>" . __('Bill received', 'karastock') . "</th>";
 
-            echo "<td width='$colsize2'>";$rand = Dropdown::showYesNo('is_bill_received', $this->fields['is_bill_received']);
+            echo "<td width='$colsize2'>";
+            $rand = Dropdown::showYesNo('is_bill_received', $this->fields['is_bill_received']);
             $params = [
                 'is_bill_received' => '__VALUE__',
                 'bill_received_at' => $this->fields['bill_received_at']
@@ -388,7 +389,7 @@ class PluginKarastockOrder extends CommonDBTM {
             Ajax::updateItemOnSelectEvent(
                 "dropdown_is_bill_received$rand",
                 "bill_received_div",
-                "../ajax/order_isreceived_dropdown.php",
+                "../ajax/datetime_dropdown.php",
                 $params
             );
 

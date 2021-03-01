@@ -55,6 +55,9 @@ function plugin_init_karastock() {
       // Register Order class and add menu
       Plugin::registerClass('PluginKarastockMenu');
       $PLUGIN_HOOKS["menu_toadd"]['karastock'] = ['management' => 'PluginKarastockMenu'];
+
+      // Add custom Stylesheet
+      $PLUGIN_HOOKS['add_css']['karastock'] = 'karastock.css';
    }
 }
 
