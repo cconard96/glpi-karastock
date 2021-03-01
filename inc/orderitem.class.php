@@ -76,11 +76,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $query = "CREATE TABLE `$table` (
                 `id` int(11) NOT NULL auto_increment,
                 `".self::$items_id."` int,
+                
                 `type` varchar(255) collate utf8_unicode_ci default NULL,  
                 `model` varchar(255) collate utf8_unicode_ci default NULL, 
                 `cost` varchar(255) collate utf8_unicode_ci default NULL, 
+
                 `tickets_id` int(11) NOT NULL default 0, 
-                `out_of_stock` int(1) NOT NULL default 0,
+
+                `out_of_stock` datetime default NULL,
+
                 `comment` varchar(255) collate utf8_unicode_ci default NULL, 
 
                 PRIMARY KEY  (`id`)
@@ -417,7 +421,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
                 echo "<td class='center'" . ($canedit ?
                 "style='cursor:pointer' onClick=\"viewEditOrderItem" . $orderId . "_" . $data['id'] . "_$rand()\""
-                : '') . ">" .  __($data['type']) . "</td>";
+                : '') . ">" .  self::getTypes(__($data['type'])) . "</td>";
                 echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['cost'] . "</td>";
                 echo "<td class='center'>" . ($data['out_of_stock'] == 1 ? __('Yes') : __('No')) . "</td>";
@@ -471,9 +475,48 @@ class PluginKarastockOrderItem extends CommonDBChild {
         }
     }
 
+    public static function getTypes($index = null) {
+
+        $options = Ticket::getAllTypesForHelpdesk();
+        $options['Other'] = __('Other');
+        
+        if ($index) {
+            if(array_key_exists($index, $options)) {
+                return $options[$index];
+            } else {
+                return $index;
+            }
+        }
+
+        return $options;
+    }
+
+    public static function typesDropdown($name, $options = []) {
+
+        $params['value'] = 0;
+        $params['toadd'] = [];
+        $params['on_change'] = '';
+        $params['display'] = true;
+
+        if (is_array($options) && count($options)) {
+            foreach ($options as $key => $val) {
+                $params[$key] = $val;
+            }
+        }
+
+        $items = [];
+        if (is_array($params['toadd']) && count($params['toadd'])) {
+            $items = $params['toadd'];
+        }
+
+        $items += self::getTypes();
+
+        return Dropdown::showFromArray($name, $items, $params);
+    }
+
+
     public static function showAddForm($orderId) {
 
-        $types = Ticket::getAllTypesForHelpdesk();
         $item = new self();
 
         $colsize1 = '13';
@@ -491,16 +534,12 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='headerRow'>";
         echo "<th colspan='4'>Adding new Item(s)</th></tr>";
+
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item type', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Dropdown::showItemTypes('type', array_keys($types),
-        [
-            'value'      => $itemtype,
-            'rand'       => $rand, 
-            'display_emptychoice' => false
-        ]);
-
+        self::typesDropdown('type');
         echo "</td></tr>";
+
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Model', 'karastock') . "</label></td><td width='$colsize2%'>";
         Html::autocompletionTextField($item, 'model', [
@@ -564,16 +603,14 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='headerRow'>";
         echo "<th colspan='4'>Adding new Item(s)</th></tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='left' width='$colsize1%'><label>" . __('Item type', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Dropdown::showItemTypes('type', array_keys($types),
-        [
-            'value'      => $this->fields['type'],
-            'rand'       => $rand, 
-            'display_emptychoice' => false
-        ]);
 
+        echo "<tr class='tab_bg_1'>";
+        echo "<td class='left' width='$colsize1%'><label>" . __('Item type', 'karastock') . "</label></td><td width='$colsize2%'>";        
+        self::typesDropdown('type', [
+            'value' => $this->fields['type']
+        ]);
         echo "</td></tr>";
+
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Model', 'karastock') . "</label></td><td width='$colsize2%'>";
         Html::autocompletionTextField($this, 'model');

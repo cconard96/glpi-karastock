@@ -78,8 +78,10 @@ class PluginKarastockOrder extends CommonDBTM {
                 `date` datetime default NULL,
                 `suppliers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_suppliers (id)',
 
-                `is_received` tinyint(1) NOT NULL default '0',
-                `bill_received` tinyint(1) NOT NULL default '0',
+                `is_received` tinyint(1) default 0,
+                `received_at` datetime default NULL,
+                `is_bill_received`  tinyint(1) default 0,
+                `bill_received_at` datetime default NULL,
                 
                 PRIMARY KEY  (`id`),
                 KEY `status` (`status`),
@@ -161,7 +163,9 @@ class PluginKarastockOrder extends CommonDBTM {
 
         $this->addDefaultFormTab($ong)
             ->addStandardTab(__class__, $ong, $options)
+
             ->addStandardTab(PluginKarastockOrderItem::class, $ong, $options)
+
             ->addStandardTab('Notepad', $ong, $options)
             ->addStandardTab('Log', $ong, $options);
 
@@ -221,6 +225,15 @@ class PluginKarastockOrder extends CommonDBTM {
         $tab[] = [
             'id' => '5',
             'table' => $this->getTable(),
+            'field' => 'received_at',
+            'name' => __('Received at', 'karastock'),
+            'datatype' => 'datetime',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '6',
+            'table' => $this->getTable(),
             'field' => 'is_received',
             'name' => __('Received', 'karastock'),
             'datatype' => 'bool',
@@ -228,7 +241,16 @@ class PluginKarastockOrder extends CommonDBTM {
         ];
 
         $tab[] = [
-            'id' => '6',
+            'id' => '7',
+            'table' => $this->getTable(),
+            'field' => 'bill_received',
+            'name' => __('Bill received at', 'karastock'),
+            'datatype' => 'datetime',
+            'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '8',
             'table' => $this->getTable(),
             'field' => 'bill_received',
             'name' => __('Bill received', 'karastock'),
@@ -238,7 +260,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
         $tab = array_merge(
             $tab,
-            PluginKarastockOrderItem::rawSearchOptionsToAdd()
+            //PluginKarastockOrderItem::rawSearchOptionsToAdd()
         );
 
         return $tab;
@@ -286,18 +308,18 @@ class PluginKarastockOrder extends CommonDBTM {
         $number = Html::cleanInputText($this->fields["name"]);
         if ($canUpdate) {
             echo sprintf(
-                "<input type='text' style='width:98%%' maxlength=250 name='name' required value=\"%1\$s\"/>",
+                "<input type='text' style='width:95%%' maxlength=250 name='name' required value=\"%1\$s\"/>",
                 $number
             );
         } else {
             echo Toolbox::getHtmlToDisplay($number);
         }
         echo "</td><th width='$colsize1'>" . __('Other ID', 'karastock') . "</th>";
-        echo "<td width='$colsize2%'>";
+        echo "<td width='$colsize2'>";
         $otherid = Html::cleanInputText($this->fields["other_identifier"]);
         if ($canUpdate) {
             echo sprintf(
-                "<input type='text' style='width:98%%' maxlength=250 name='other_identifier' value=\"%1\$s\"/>",
+                "<input type='text' style='width:95%%' maxlength=250 name='other_identifier' value=\"%1\$s\"/>",
                 $otherid
             );
         } else {
@@ -307,7 +329,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
 
         echo "<th width='$colsize1'>" . __('Supplier') . "</th>";
-        echo "<td width='$colsize2%'>";
+        echo "<td width='$colsize2'>";
         Supplier::dropdown([
             'name' => 'suppliers_id',
             'value' => $this->fields['suppliers_id'],
@@ -318,7 +340,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
         echo "<tr class='tab_bg_1'>";
         echo "<th width='$colsize1'>" . __('Order date', 'karastock') . "</th>";
-        echo "<td width='$colsize2%'>";
+        echo "<td width='$colsize2'>";
         $date = $this->fields["date"];
         if ($canUpdate) {
             Html::showDateField('date', [
@@ -335,14 +357,54 @@ class PluginKarastockOrder extends CommonDBTM {
             
             echo "<tr class='tab_bg_1'>";
             echo "<th width='$colsize1'>" . __('Received', 'karastock') . "</th>";
-            echo "<td width='$colsize2%'>";
-            Dropdown::showYesNo('is_received', $this->fields['is_received']);
+            echo "<td width='$colsize2'>";
+            $rand = Dropdown::showYesNo('is_received', $this->fields['is_received']);
+            $params = [
+                'is_received' => '__VALUE__',
+                'received_at' => $this->fields['received_at']
+            ];
+
+            Ajax::updateItemOnSelectEvent(
+                "dropdown_is_received$rand",
+                "received_div",
+                "../ajax/order_isreceived_dropdown.php",
+                $params
+            );
+
+            $opt = ['value' => $this->fields['received_at']];
+            echo "<div id='received_div'>";
+            if ($this->fields['is_received']) { 
+                Html::showDateField('received_at', $opt);
+            }
+            echo "</div>";
             echo "</td><th width='$colsize1'>" . __('Bill received', 'karastock') . "</th>";
-            echo "<td width='$colsize2%'>";
-            Dropdown::showYesNo('bill_received', $this->fields['bill_received']);
+
+            echo "<td width='$colsize2'>";$rand = Dropdown::showYesNo('is_bill_received', $this->fields['is_bill_received']);
+            $params = [
+                'is_bill_received' => '__VALUE__',
+                'bill_received_at' => $this->fields['bill_received_at']
+            ];
+
+            Ajax::updateItemOnSelectEvent(
+                "dropdown_is_bill_received$rand",
+                "bill_received_div",
+                "../ajax/order_isreceived_dropdown.php",
+                $params
+            );
+
+            $opt = ['value' => $this->fields['bill_received_at']];
+            echo "<div id='bill_received_div'>";
+            if ($this->fields['is_bill_received']) { 
+                Html::showDateField('bill_received_at', $opt);
+            }
+            echo "</div>";
             echo "</td></tr>";
         }
         
         $this->showFormButtons($options);
+    }
+
+    static function showDateTime($name, $options) {
+
     }
 }   
