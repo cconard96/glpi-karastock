@@ -51,16 +51,24 @@ echo "<div class='center'>";
 echo "<table class='tab_cadre'>";
 echo "<tr><th colspan='2'>" . __("Stock management", "karastock") . "</th></tr>";
 
-echo "<tr class='tab_bg_1 center'>";
-echo "<td></td>";
-echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockOrder')."'>" .
-__("Orders", "karastock") . "</a></td></tr>";
 
+if (PluginKarastockOrder::canView()) {
 
-echo "<tr class='tab_bg_1 center'>";
-echo "<td></td>";
-echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."'>" .
-__("Stock", "karastock") . "</a></td></tr>";
+    echo "<tr class='tab_bg_1 center'>";
+    echo "<td><i class='fas fa-shopping-cart' style='font-size:24px; margin: 5px 0'></i></td>";
+    echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockOrder')."'>" .
+    __("Orders", "karastock") . "</a></td></tr>";
+
+}
+
+if (PluginKarastockStock::canView()) {
+
+    echo "<tr class='tab_bg_1 center'>";
+    echo "<td><i class='fas fa-cubes' style='font-size:24px; margin: 5px 0'></i></td>";
+    echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."'>" .
+    __("Stock", "karastock") . "</a></td></tr>";
+
+}
 
 echo "</table></div>";
 Html::footer();
