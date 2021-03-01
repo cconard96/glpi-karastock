@@ -83,7 +83,7 @@ class PluginKarastockStock extends CommonDBTM {
     static function show() {
         global $DB;
         
-        $query = "SELECT count(*) as 'count', `type`, `model` FROM " . PluginKarastockOrderItem::getTable() . " WHERE out_of_stock = 0 GROUP BY `type`,`model` ORDER BY `type`,`model`";
+        $query = "SELECT count(*) as 'count', `type`, `model` FROM " . PluginKarastockOrderItem::getTable() . " WHERE is_out_of_stock = 0 GROUP BY `type`,`model` ORDER BY `type`,`model`";
         $result = $DB->query($query);
                 
         echo "<div class='center'>";
@@ -114,7 +114,7 @@ class PluginKarastockStock extends CommonDBTM {
         global $DB;
         
         $query = "SELECT * FROM " . PluginKarastockOrderItem::getTable() . " as oi"
-            . " WHERE oi.out_of_stock = 0 AND oi.type = '$type' ORDER BY `" . PluginKarastockOrder::getForeignKeyField() . "`, `model`";
+            . " WHERE oi.is_out_of_stock = 0 AND oi.type = '$type' ORDER BY `" . PluginKarastockOrder::getForeignKeyField() . "`, `model`";
 
         $result = $DB->query($query);
                 
@@ -156,7 +156,7 @@ class PluginKarastockStock extends CommonDBTM {
         global $DB;
         
         $query = "SELECT * FROM " . PluginKarastockOrderItem::getTable() . " as oi"
-            . " WHERE oi.out_of_stock = 0 AND oi.type = '$type' AND oi.model = '$model' ORDER BY `" . PluginKarastockOrder::getForeignKeyField() . "`";
+            . " WHERE oi.is_out_of_stock = 0 AND oi.type = '$type' AND oi.model = '$model' ORDER BY `" . PluginKarastockOrder::getForeignKeyField() . "`";
 
         $result = $DB->query($query);
                 
