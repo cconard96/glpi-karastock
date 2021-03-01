@@ -91,8 +91,10 @@ function plugin_karastock_check_prerequisites() {
 
    //Version check is not done by core in GLPI < 9.2 but has to be delegated to core in GLPI >= 9.2.
    $version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
-   if (version_compare($version, PLUGIN_KARASTOCK_MIN_GLPI, '<')) {
-      echo "This plugin requires GLPI >= " . PLUGIN_KARASTOCK_MIN_GLPI;
+   if (version_compare($version, PLUGIN_KARASTOCK_MIN_GLPI, '<') 
+      || (version_compare($version, PLUGIN_KARASTOCK_MAX_GLPI, '>='))) {
+      
+         echo "This plugin requires GLPI >= " . PLUGIN_KARASTOCK_MIN_GLPI . " and < " . PLUGIN_KARASTOCK_MAX_GLPI;
       return false;
    }
    return true;
