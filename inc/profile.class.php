@@ -185,6 +185,14 @@ class PluginKarastockProfile extends Profile {
                 'rights' => [
                     READ => __('Read'),
                 ]
+            ],
+            [
+                'itemtype' => PluginKarastockHistory::class,
+                'label' => PluginKarastockHistory::getTypeName(1),
+                'field' => PluginKarastockHistory::$rightname,
+                'rights' => [
+                    READ => __('Read'),
+                ]
             ]
         ];
 

@@ -42,22 +42,11 @@ Html::header(
     $_SERVER['PHP_SELF'],
     'management',
     'PluginKarastockMenu',
-    'stock'    
+    'history'    
 );
 
-(new PluginKarastockStock)->checkGlobal(READ);
+(new PluginKarastockHistory)->checkGlobal(READ);
 
-if (isset($_GET["model"]) && isset($_GET["type"])) {
-
-    PluginKarastockStock::ShowModel($_GET["type"], $_GET["model"]);
-
-} else if (isset($_GET["type"])) {
-    
-    PluginKarastockStock::ShowType($_GET["type"]);
-
-} else {
-
-    PluginKarastockStock::Show();
-}
+PluginKarastockHistory::show($_GET);
 
 Html::footer();

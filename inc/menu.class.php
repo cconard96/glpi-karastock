@@ -95,6 +95,8 @@ class PluginKarastockMenu extends CommonGLPI {
                 'page'  => PluginKarastockStock::getSearchURL(false),
                 'icon'  => PluginKarastockStock::getIcon(),
             ];
+
+            $menu['options']['stock']['links'] = [];
         }
 
         if(PluginKarastockOrder::canView()) {
@@ -109,7 +111,17 @@ class PluginKarastockMenu extends CommonGLPI {
                    'search' => PluginKarastockOrder::getSearchURL(false),
                    'add'    => PluginKarastockOrder::getFormURL(false)
                 ];
-             }
+            }
+        }
+        
+        if(PluginKarastockHistory::canView()) {
+            $menu['options']['history'] = [
+                'title' => PluginKarastockHistory::getTypeName(1),
+                'page'  => PluginKarastockHistory::getSearchURL(false),
+                'icon'  => PluginKarastockHistory::getIcon(),
+            ];
+            
+            $menu['options']['history']['links'] = [];
         }
 
         return $menu;

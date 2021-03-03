@@ -70,5 +70,14 @@ if (PluginKarastockStock::canView()) {
 
 }
 
+if (PluginKarastockHistory::canView()) {
+
+    echo "<tr class='tab_bg_1 center'>";
+    echo "<td><i class='fas fa-history' style='font-size:24px; margin: 5px 0'></i></td>";
+    echo "<td><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockHistory')."?history'>" .
+    __("History", "karastock") . "</a></td></tr>";
+
+}
+
 echo "</table></div>";
 Html::footer();

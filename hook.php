@@ -33,7 +33,8 @@ function plugin_karastock_classes()
         'Order',
         'OrderItem',
         'Menu',
-        'Stock'
+        'Stock',
+        'History'
     ];
 }
 
