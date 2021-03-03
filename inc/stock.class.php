@@ -83,7 +83,7 @@ class PluginKarastockStock extends CommonDBTM {
     static function show() {
         global $DB;
         
-        $query = "SELECT count(*) as 'count', `type`, `model`, o.is_received 
+        $query = "SELECT count(*) as 'count', `type`, `model`, o.is_received, o.`name` AS 'ordername'
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
             WHERE is_out_of_stock = 0 AND o.is_received = 1 
@@ -91,7 +91,7 @@ class PluginKarastockStock extends CommonDBTM {
             
             UNION
             
-            SELECT count(*) as 'count', `type`, `model`, o.is_received 
+            SELECT count(*) as 'count', `type`, `model`, o.is_received, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
             WHERE is_out_of_stock = 0 AND o.is_received = 0 
@@ -134,7 +134,7 @@ class PluginKarastockStock extends CommonDBTM {
     {
         global $DB;
         
-        $query = "SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received` 
+        $query = "SELECT count(*) as 'count', `type`, `model`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
             WHERE is_out_of_stock = 0 AND o.`is_received` = 1 AND oi.type = '$type'
@@ -142,11 +142,12 @@ class PluginKarastockStock extends CommonDBTM {
             
             UNION
             
-            SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received` 
+            SELECT count(*) as 'count', `type`, `model`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
             WHERE is_out_of_stock = 0 AND o.`is_received` = 0 AND oi.type = '$type'
-            GROUP BY `type`,`model` 
+            GROUP BY `type`,`model`
+
             ORDER BY `type`,`model`
         ";
 
@@ -158,30 +159,18 @@ class PluginKarastockStock extends CommonDBTM {
 
         if($result) {
 
-            echo "<tr><th class='center'>" . __('Order ID') . "</th>";
-            echo "<th class='center'>" . __('Type') . "</th>";
+            echo "<tr><th class='center'>" . __('Type') . "</th>";
             echo "<th class='center'>" . __('Model') . "</th>";
             echo "<th class='center'>" . __('Count') . "</th>";
-            echo "<th class='center'>" . __('Ticket') . "</th>";
             echo "<th class='center'>" . __('Pending') . "</th></tr>";
 
             $number = $DB->numrows($result);            
             
             while ($data = $DB->fetch_assoc($result)) {
-
-                echo "<tr><td class='center'><a href='". PluginKarastockOrder::getFormURLWithID($data[PluginKarastockOrder::getForeignKeyField()]) ."'>" . $data[PluginKarastockOrder::getForeignKeyField()] . "</a></td>";
-                echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "'>" . $data['type'] . "</a></td>";
+                
+                echo "<tr><td class='center'>" . $data['type'] . "</td>";
                 echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "&model=" . $data['model']. "'>" . $data['model'] . "</a></td>";
                 echo "<td class='center'>" . $data['count'] . "</td>";
-                echo "<td class='center'>";
-                $ticketId = $data['tickets_id'];
-                if($ticketId > 0) {
-                    $ticket = new Ticket();
-                    $ticket->getFromDB($ticketId);
-
-                    echo "<a href='". $ticket->getLinkURL() ."'>" . $ticketId . "</a>";
-                }
-                echo"</td>";
                 echo "<td class='center'>" . 
                     ($data['is_received'] == 1 
                     ? "<i class='fas fa-check'></i>" 
@@ -197,19 +186,28 @@ class PluginKarastockStock extends CommonDBTM {
 
         global $DB;
         
-        $query = "SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received` 
+        $query = "SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername'
             FROM glpi_plugin_karastock_orderitems as oi 
-            INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 AND o.`is_received` = 1 AND oi.type = '$type' AND oi.model = '$model'
-            GROUP BY `type`,`model`
-            
+            INNER JOIN glpi_plugin_karastock_orders as o 
+                ON o.`id` = oi.`plugin_karastock_orders_id` 
+            WHERE is_out_of_stock = 0 
+                AND o.`is_received` = 1 
+                AND oi.type = '$type' 
+                AND oi.model = '$model'
+            GROUP BY plugin_karastock_orders_id
+                        
             UNION
             
-            SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received` 
+            SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
-            INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 AND o.`is_received` = 0 AND oi.type = '$type' AND oi.model = '$model'
-            GROUP BY `type`,`model` 
+            INNER JOIN glpi_plugin_karastock_orders as o 
+                ON o.`id` = oi.`plugin_karastock_orders_id` 
+            WHERE is_out_of_stock = 0 
+                AND o.`is_received` = 0 
+                AND oi.type = '$type' 
+                AND oi.model = '$model'
+            GROUP BY plugin_karastock_orders_id
+
             ORDER BY `type`,`model`
         ";
 
@@ -217,34 +215,24 @@ class PluginKarastockStock extends CommonDBTM {
                 
         echo "<div class='center'>";
         echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr><th colspan='6' class='center'>" . __("Stock management", "karastock") . " - " . __('Type')  . " : ". $type . " - " . __('Model') . " : " . $model . "</th></tr>";
+        echo "<tr><th colspan='5' class='center'>" . __("Stock management", "karastock") . " - " . __('Type')  . " : ". $type . " - " . __('Model') . " : " . $model . "</th></tr>";
 
         if($result) {
 
-            echo "<tr><th class='center'>" . __('Order ID') . "</th>";
+            echo "<tr><th class='center'>" . __('Order') . "</th>";
             echo "<th class='center'>" . __('Type') . "</th>";
             echo "<th class='center'>" . __('Model') . "</th>";
             echo "<th class='center'>" . __('Count') . "</th>";
-            echo "<th class='center'>" . __('Ticket') . "</th>";
             echo "<th class='center'>" . __('Pending') . "</th></tr>";
 
             $number = $DB->numrows($result);            
             
             while ($data = $DB->fetch_assoc($result)) {
 
-                echo "<tr><td class='center'><a href='". PluginKarastockOrder::getFormURLWithID($data[PluginKarastockOrder::getForeignKeyField()]) ."'>" . $data[PluginKarastockOrder::getForeignKeyField()] . "</a></td>";
+                echo "<tr><td class='center'><a href='". PluginKarastockOrder::getFormURLWithID($data[PluginKarastockOrder::getForeignKeyField()]) ."'>" . $data['ordername'] . "</a></td>";
                 echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "'>" . $data['type'] . "</a></td>";
-                echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "&model=" . $data['model']. "'>" . $data['model'] . "</a></td>";
+                echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['count'] . "</td>";
-                echo "<td class='center'>";
-                $ticketId = $data['tickets_id'];
-                if($ticketId > 0) {
-                    $ticket = new Ticket();
-                    $ticket->getFromDB($ticketId);
-
-                    echo "<a href='". $ticket->getLinkURL() ."'>" . $ticketId . "</a>";
-                }
-                echo"</td>";
                 echo "<td class='center'>" . 
                     ($data['is_received'] == 1 
                     ? "<i class='fas fa-check'></i>" 
