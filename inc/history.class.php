@@ -80,6 +80,75 @@ class PluginKarastockHistory extends CommonDBTM {
         return "fas fa-history";
     }
 
+    private static function executeSearch($date1, $date2, $suppliers_id) {
+        global $DB;  
+
+        $suppliersTable     = Supplier::getTable();
+        $suppliersFK        = Supplier::getForeignKeyField();
+        $ticketsTable       = Ticket::getTable();
+        $ticketsFK          = Ticket::getForeignKeyField();
+        $entitiesTable      = Entity::getTable();
+        $entitiesFK         = Entity::getForeignKeyField();        
+        $ordersTable        = PluginKarastockOrder::getTable();
+        $ordersFK           = PluginKarastockOrder::getForeignKeyField();
+        $orderItemsTable    = PluginKarastockOrderItem::getTable();
+        $orderItemsFK       = PluginKarastockOrderItem::getForeignKeyField();
+    
+        $query = "SELECT oi.*, o.name as 'ordername', o.suppliers_id, s.name as 'suppliername', e.name as 'entityname'
+            FROM $orderItemsTable as oi
+            
+            INNER JOIN $ordersTable as o
+                ON o.id = oi.$ordersFK
+            
+            INNER JOIN $suppliersTable as s
+                ON o.$suppliersFK = s.id
+            
+            LEFT JOIN $ticketsTable as t
+                ON oi.$ticketsFK = t.id
+
+            LEFT JOIN $entitiesTable as e
+                ON t.$entitiesFK = e.id
+
+            WHERE oi.out_of_stock_at >= '$date1'
+            AND oi.out_of_stock_at <= '$date2'";
+        
+        if($suppliers_id) {
+
+            $query .= " AND o.suppliers_id = $suppliers_id";
+        }
+        
+        $result = $DB->query($query);
+        return $result;
+    }
+
+    static function getFieldsName() {
+        return array(
+            __('Order', 'karastock'), 
+            __('Supplier'),
+            __('Type'),
+            __('Model'),
+            __('Cost'),
+            __('Ticket'),
+            __('Entity'),
+            __('Comment'),
+            __('Out of stock at', 'karastock')
+        );
+    }
+
+    static function getFieldsValuesFromData($data) {
+        return array(
+            $data['ordername'],
+            $data['suppliername'],
+            $data['type'],
+            $data['model'],
+            ($data['cost'] > 0 ? $data['cost'] : ""),
+            ($data['tickets_id'] > 0 ? $data['tickets_id'] : ""),
+            ($data['tickets_id'] > 0 ? $data['entityname'] : ""),
+            $data['comment'],
+            Html::convDate($data['out_of_stock_at']) 
+        );
+    }
+
     static function show($params = []) {
         global $DB;  
         
@@ -93,53 +162,47 @@ class PluginKarastockHistory extends CommonDBTM {
             ? $params['date2'] 
             : date("Y-m-d");
 
-        //$supplier = array_key_exists('date1', $params) ? $params['date1'] : '';
+        $supplier = array_key_exists('suppliers_id', $params) 
+            ? $params['suppliers_id'] 
+            : null;
 
-        self::showSearchForm($date1, $date2);
-    
-        $query = "SELECT oi.*, o.name as 'ordername', o.suppliers_id
-            FROM glpi_plugin_karastock_orderitems as oi
-            INNER JOIN glpi_plugin_karastock_orders as o
-                ON o.id = oi.plugin_karastock_orders_id
-            WHERE oi.out_of_stock_at >= '$date1'
-            AND oi.out_of_stock_at <= '$date2'";
-        
-        $result = $DB->query($query);
-        
+        self::showSearchForm($date1, $date2, $supplier);
+
+        $result = self::executeSearch($date1, $date2, $supplier);
+
+        self::showExportButton($date1, $date2, $supplier);
+
         echo "<div class='center'>";
         echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr><th colspan='7' class='center'>" . __("Stock management", "karastock") . "</th></tr>";
+        echo "<tr><th colspan='9' class='center'>" . __("Stock management", "karastock") . "</th></tr>";
 
         if($result) {
 
-            echo "<tr><th class='center'>" . __('Order') . "</th>";
-            echo "<th class='center'>" . __('Type') . "</th>";
-            echo "<th class='center'>" . __('Model') . "</th>";
-            echo "<th class='center'>" . __('Cost') . "</th>";
-            echo "<th class='center'>" . __('Ticket ID') . "</th>";
-            echo "<th class='center'>" . __('Comment') . "</th>";
-            echo "<th class='center'>" . __('Out of stock at', 'karastock') . "</th></tr>";
+            echo "<tr>";
+            foreach(static::getFieldsName() as $field) {
+                echo "<th class='center'>" .$field. "</th>";
+            }
+            echo "</tr>";
 
             $number = $DB->numrows($result);            
             
-            while ($data = $DB->fetch_assoc($result)) {
-                
-                echo "<tr><td class='center'>" . $data['ordername'] . "</td>";
-                echo "<td class='center'>" . $data['type'] . "</td>";
-                echo "<td class='center'>" . $data['model'] . "</td>";
-                echo "<td class='center'>" . ($data['cost'] > 0 ? $data['cost'] : "") . "</td>";
-                echo "<td class='center'>" . ($data['tickets_id'] > 0 ? $data['tickets_id'] : "") . "</td>";
-                echo "<td class='center'>" . $data['comment'] . "</td>";
-                echo "<td class='center'>" .  Html::convDate($data['out_of_stock_at']) . "</td></tr>";
+            while ($data = $DB->fetch_assoc($result)) {                
+
+                echo "<tr>";
+                foreach(static::getFieldsValuesFromData($data) as $value) {
+                    echo "<th class='center'>" .$value. "</th>";
+                }
+                echo "</tr>";
+
             }
         }
 
         echo "</table></div>";
     }
 
-    private static function showSearchForm($date1, $date2) {
+    private static function showSearchForm($date1, $date2, $suppliers_id = null) {
 
-        $out = "<form method='get' name='form' action='" . PluginKarastockHistory::getSearchURL(true) . "'><div class='center'>";
+        $out = "<form method='get' name='form' action='" . self::getSearchURL(true) . "'><div class='center'>";
 
         $out .= "<table class='tab_cadre'>";
         $out .= "<tr class='tab_bg_2'><td class='right'>".__('Start date')."</td><td>";
@@ -151,7 +214,7 @@ class PluginKarastockHistory extends CommonDBTM {
                 'display' => false
             ]
         );
-        $out .= "</td><td rowspan='2' class='center'>";
+        $out .= "</td><td rowspan='3' class='center'>";
         $out .= "<input type='submit' class='submit' value='".__s('Display report')."'></td></tr>";
 
         $out .= "<tr class='tab_bg_2'><td class='right'>".__('End date')."</td><td>";
@@ -164,10 +227,92 @@ class PluginKarastockHistory extends CommonDBTM {
         );
 
         $out .= "</td></tr>";
+        $out .= "<tr class='tab_bg_2'><td class='right'>".__('Supplier')."</td><td>";
+        
+        $out .= Supplier::dropdown([
+            'name' => 'suppliers_id',
+            'value' => $suppliers_id,
+            'display' => false
+        ]);
+
+        $out .= "</td></tr>";
         $out .= "</table></div>";
 
         // form using GET method : CRSF not needed
         $out .= Html::closeForm(false);
         echo $out;
+    }
+
+    private static function showExportButton($date1, $date2, $suppliers_id = null) {
+        
+        $out = "<form method='get' name='form' style='margin:15px;' action='". self::getSearchURL(true) . "'><div class='center'>";
+        $out .= "<input type='hidden' name='export' value='true' />";
+        $out .= "<input type='hidden' name='date1' value='$date1' />";
+        $out .= "<input type='hidden' name='date2' value='$date2' />";
+
+        if($suppliers_id) {
+            
+            $out .= "<input type='hidden' name='suppliers_id' value='$suppliers_id' />";
+        }
+
+        $out .= "<span class='responsive_hidden'>" . __('Export to CSV') . "</span>";
+        $out .= '<button type="submit" name="export" class="unstyled pointer" title="Exporter"><i class="far fa-save"></i><span class="sr-only">Exporter<span></button></div>';
+
+        // form using GET method : CRSF not needed
+        $out .= Html::closeForm(false);
+        echo $out;
+    }
+
+    public static function exportReport($params) {   
+        global $DB;       
+
+        $date1 = array_key_exists('date1', $params) 
+            ? $params['date1'] 
+            : null;
+
+        $date2 = array_key_exists('date2', $params) 
+            ? $params['date2'] 
+            : null;
+
+        $suppliers_id = array_key_exists('suppliers_id', $params) 
+            ? $params['suppliers_id'] 
+            : null;
+
+        if($date1 == null || $date2 == null) 
+            return;
+        
+        $result = self::executeSearch($date1, $date2, $suppliers_id);
+
+        if($result) {
+
+            // filename
+            $filename = 'history.csv';
+
+            // open file to write
+            $file = fopen($filename, 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // column names array
+            $columns = self::getFieldsName();
+
+            // write the columns
+            fputcsv($file, $columns, ';');
+            
+            $number = $DB->numrows($result);            
+            
+            while ($data = $DB->fetch_assoc($result)) {
+
+                $row = self::getFieldsValuesFromData($data);  
+
+                // write the data
+                fputcsv($file, $row, ';');
+            }
+
+            fclose($file);
+        
+            header('Content-type: text/csv; charset=utf-8');
+            header('Content-disposition:attachment; filename="'.$filename.'"');
+            readfile($filename);
+        }   
     }
 }

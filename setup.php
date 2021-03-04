@@ -58,6 +58,9 @@ function plugin_init_karastock() {
 
       // Add custom Stylesheet
       $PLUGIN_HOOKS['add_css']['karastock'] = 'karastock.css';
+
+      // Register Report hook (front/report.dynamic.php)
+      $PLUGIN_HOOKS['dynamicReport']['karastock'] = ['PluginKarastockHistory', 'dynamicReport'];   
    }
 }
 

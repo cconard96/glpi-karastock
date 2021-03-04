@@ -37,16 +37,24 @@
 
 include("../../../inc/includes.php");
 
-Html::header(
-    __('Karastock', 'karastock'),
-    $_SERVER['PHP_SELF'],
-    'management',
-    'PluginKarastockMenu',
-    'history'    
-);
-
 (new PluginKarastockHistory)->checkGlobal(READ);
 
-PluginKarastockHistory::show($_GET);
+if(array_key_exists('export', $_GET)) {
 
-Html::footer();
+    PluginKarastockHistory::exportReport($_GET);
+    // Html::back();
+
+} else {
+    
+    Html::header(
+        __('Karastock', 'karastock'),
+        $_SERVER['PHP_SELF'],
+        'management',
+        'PluginKarastockMenu',
+        'history'    
+    );
+
+    PluginKarastockHistory::show($_GET);
+
+    Html::footer();
+}
