@@ -7,13 +7,19 @@
    <description>
       <short>
          <!-- Add as many lang tag you want -->
-         <en>Karastock GLPI Plugin</en>
-         <fr>Karastock GLPI Plugin</fr>
+         <en>Small / medium business order / stock management plugin</en>
+         <fr>Plugin de gestion des commandes/stock pour petite/moyenne entreprise</fr>
       </short>
       <long>
          <!-- Add as many lang tag you want -->
          <en>A long description for karastock GLPI plugin.</en>
-         <fr>Gestionnaire de stock et de commande (réception, affectation et sortie de stock)</fr>
+         <fr>
+            Gestionnaire de stock et de commande (réception, affectation et sortie de stock) afin d'avoir un visuel au plus proche du réel de vos stocks.
+            * Pour chaque commande, définissez le fournisseur, la date de commande ainsi que la date de réception et de facturation.
+            * Ajoutez-y le contenu (type, modèle, quantité et prix) puis affectez-les à un Ticket d'assistance et sortez-le du stock
+            * Une visualisation du stock, global, par type et/ou modèle
+            * Une visualisation rapide des commandes en attente de livraison grâce aux icones
+         </fr>
       </long>
    </description>
    <homepage>https://github.com/karhel/glpi-karastock</homepage>
@@ -41,16 +47,6 @@
       <lang>fr_FR</lang>
    </langs>
    <license>GPL V3+</license>
-   <tags>
-      <en>
-         <tag>One tag</tag>
-         <tag>Another tag</tag>
-      </en>
-      <fr>
-         <tag>Un tag</tag>
-         <tag>Un autre tag</tag>
-      </fr>
-   </tags>
    <screenshots>
       <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot.png</screenshot>
       <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot2.png</screenshot>
