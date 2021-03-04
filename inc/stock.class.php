@@ -109,8 +109,8 @@ class PluginKarastockStock extends CommonDBTM {
 
             echo "<tr><th class='center'>" . __('Type') . "</th>";
             echo "<th class='center'>" . __('Model') . "</th>";
-            echo "<th class='center'>" . __('Count') . "</th>";
-            echo "<th class='center'>" . __('Pending') . "</th></tr>";
+            echo "<th class='center'>" . __('Quantity') . "</th>";
+            echo "<th class='center'>" . __('Status') . "</th></tr>";
 
             $number = $DB->numrows($result);            
             
@@ -161,8 +161,8 @@ class PluginKarastockStock extends CommonDBTM {
 
             echo "<tr><th class='center'>" . __('Type') . "</th>";
             echo "<th class='center'>" . __('Model') . "</th>";
-            echo "<th class='center'>" . __('Count') . "</th>";
-            echo "<th class='center'>" . __('Pending') . "</th></tr>";
+            echo "<th class='center'>" . __('Quantity') . "</th>";
+            echo "<th class='center'>" . __('Status') . "</th></tr>";
 
             $number = $DB->numrows($result);            
             
@@ -219,11 +219,11 @@ class PluginKarastockStock extends CommonDBTM {
 
         if($result) {
 
-            echo "<tr><th class='center'>" . __('Order') . "</th>";
+            echo "<tr><th class='center'>" . __('Order', 'karastock') . "</th>";
             echo "<th class='center'>" . __('Type') . "</th>";
             echo "<th class='center'>" . __('Model') . "</th>";
-            echo "<th class='center'>" . __('Count') . "</th>";
-            echo "<th class='center'>" . __('Pending') . "</th></tr>";
+            echo "<th class='center'>" . __('Quantity', 'karastock') . "</th>";
+            echo "<th class='center'>" . __('Status') . "</th></tr>";
 
             $number = $DB->numrows($result);            
             
