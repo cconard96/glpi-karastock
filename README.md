@@ -1,6 +1,10 @@
 # karastock GLPI plugin
 
-Add your plugin description here.
+Stock and order manager (reception, allocation and removal of stock) in order to have a visual as close as possible to the real of your stocks.
+* For each order, define the supplier, the order date as well as the receipt and invoice date.
+* Add the content (type, model, quantity and price) then assign them to a Support ticket and take it out of stock
+* A visualization of the stock, overall, by type and / or model
+* A quick visualization of the orders awaiting delivery thanks to the icons
 
 ## Contributing
 
