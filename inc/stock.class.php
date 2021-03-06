@@ -116,7 +116,7 @@ class PluginKarastockStock extends CommonDBTM {
             
             while ($data = $DB->fetch_assoc($result)) {
                               
-                echo "<tr><td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "'>" . $data['type'] . "</a></td>";
+                echo "<tr><td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "'>" . PluginKarastockOrderItem::getTypes($data['type']) . "</a></td>";
                 echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "&model=" . $data['model']. "'>" . $data['model'] . "</a></td>";
                 echo "<td class='center'>" . $data['count'] . "</td>";
                 echo "<td class='center'>" . 
@@ -168,7 +168,7 @@ class PluginKarastockStock extends CommonDBTM {
             
             while ($data = $DB->fetch_assoc($result)) {
                 
-                echo "<tr><td class='center'>" . $data['type'] . "</td>";
+                echo "<tr><td class='center'>" . PluginKarastockOrderItem::getTypes($data['type']) . "</td>";
                 echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "&model=" . $data['model']. "'>" . $data['model'] . "</a></td>";
                 echo "<td class='center'>" . $data['count'] . "</td>";
                 echo "<td class='center'>" . 
@@ -230,7 +230,7 @@ class PluginKarastockStock extends CommonDBTM {
             while ($data = $DB->fetch_assoc($result)) {
 
                 echo "<tr><td class='center'><a href='". PluginKarastockOrder::getFormURLWithID($data[PluginKarastockOrder::getForeignKeyField()]) ."'>" . $data['ordername'] . "</a></td>";
-                echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "'>" . $data['type'] . "</a></td>";
+                echo "<td class='center'><a href='".Toolbox::getItemTypeSearchURL('PluginKarastockStock')."?type=" . $data['type']. "'>" . PluginKarastockOrderItem::getTypes($data['type']) . "</a></td>";
                 echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['count'] . "</td>";
                 echo "<td class='center'>" . 

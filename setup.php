@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_KARASTOCK_VERSION', '0.9');
+define('PLUGIN_KARASTOCK_VERSION', '0.9.1');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_KARASTOCK_MIN_GLPI", "9.5");
@@ -57,10 +57,7 @@ function plugin_init_karastock() {
       $PLUGIN_HOOKS["menu_toadd"]['karastock'] = ['management' => 'PluginKarastockMenu'];
 
       // Add custom Stylesheet
-      $PLUGIN_HOOKS['add_css']['karastock'] = 'karastock.css';
-
-      // Register Report hook (front/report.dynamic.php)
-      $PLUGIN_HOOKS['dynamicReport']['karastock'] = ['PluginKarastockHistory', 'dynamicReport'];   
+      $PLUGIN_HOOKS['add_css']['karastock'] = 'karastock.css'; 
    }
 }
 

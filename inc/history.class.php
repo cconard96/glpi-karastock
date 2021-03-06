@@ -131,7 +131,7 @@ class PluginKarastockHistory extends CommonDBTM {
             __('Ticket'),
             __('Entity'),
             __('Comment'),
-            __('Out of stock at', 'karastock')
+            __('Withdrawal at', 'karastock')
         );
     }
 
@@ -139,7 +139,7 @@ class PluginKarastockHistory extends CommonDBTM {
         return array(
             $data['ordername'],
             $data['suppliername'],
-            $data['type'],
+            PluginKarastockOrderItem::getTypes($data['type']),
             $data['model'],
             ($data['cost'] > 0 ? $data['cost'] : ""),
             ($data['tickets_id'] > 0 ? $data['tickets_id'] : ""),

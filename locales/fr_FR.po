@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-04 22:49+0100\n"
-"PO-Revision-Date: 2021-03-04 22:54+0100\n"
+"POT-Creation-Date: 2021-03-06 23:23+0100\n"
+"PO-Revision-Date: 2021-03-06 23:34+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +44,11 @@ msgstr "Historique"
 msgid "Order"
 msgid_plural "Orders"
 msgstr[0] "Commande"
-msgstr[1] "Commandes"
+msgstr[1] ""
 
 #: inc/history.class.php:134
-msgid "Out of stock at"
-msgstr "Sortie des stock le"
+msgid "Withdrawal at"
+msgstr "Sortie des stocks le"
 
 #: inc/order.class.php:200 inc/order.class.php:306
 msgid "Order Number"
@@ -81,7 +81,7 @@ msgstr "%1$s - ID %2$d"
 
 #: inc/order.class.php:317
 msgid "Other ID"
-msgstr "ID Commande"
+msgstr "Autre identifiant"
 
 #: inc/orderitem.class.php:127
 msgid "Order item"
@@ -91,12 +91,12 @@ msgstr[1] "Articles"
 
 #: inc/orderitem.class.php:219 inc/orderitem.class.php:291
 #: inc/orderitem.class.php:408
-msgid "Is out of stock"
-msgstr "Est sortie du stock"
+msgid "Withdrawal"
+msgstr "Sortie des stocks"
 
 #: inc/orderitem.class.php:372
 msgid "Add new items to this Order"
-msgstr "Ajouter un nouvel article dans la commande"
+msgstr "Ajouter un nouvel article"
 
 #: inc/orderitem.class.php:430
 msgid "Yes at"
@@ -112,7 +112,7 @@ msgstr "Modèle"
 
 #: inc/orderitem.class.php:556 inc/orderitem.class.php:625
 msgid "Item Cost"
-msgstr "Coût"
+msgstr "Tarif"
 
 #: inc/orderitem.class.php:563
 msgid "Item Count"
@@ -122,6 +122,6 @@ msgstr "Quantité"
 msgid "Quantity"
 msgstr "Quantité"
 
-#: setup.php:122
+#: setup.php:119
 msgid "Installed / not configured"
 msgstr "Installé / Non configuré"

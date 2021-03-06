@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-04 22:49+0100\n"
+"POT-Creation-Date: 2021-03-06 23:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,7 +47,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/history.class.php:134
-msgid "Out of stock at"
+msgid "Withdrawal at"
 msgstr ""
 
 #: inc/order.class.php:200 inc/order.class.php:306
@@ -91,7 +91,7 @@ msgstr[1] ""
 
 #: inc/orderitem.class.php:219 inc/orderitem.class.php:291
 #: inc/orderitem.class.php:408
-msgid "Is out of stock"
+msgid "Withdrawal"
 msgstr ""
 
 #: inc/orderitem.class.php:372
@@ -122,6 +122,6 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: setup.php:122
+#: setup.php:119
 msgid "Installed / not configured"
 msgstr ""

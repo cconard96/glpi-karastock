@@ -216,7 +216,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             'id' => '4',
             'table' => $this->getTable(),
             'field' => 'is_withdrawaled',
-            'name' => __('Is out of stock', 'karastock'),
+            'name' => __('Withdrawal', 'karastock'),
             'datatype' => 'bool',
             'searchtype' => 'equal',
             'massiveaction' => true
@@ -288,7 +288,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             'id' => '22',
             'table' => self::getTable(),
             'field' => 'is_withdrawaled',
-            'name' => __('Is out of stock', 'karastock'),
+            'name' => __('Withdrawal', 'karastock'),
             'forcegroupby' => true,
             'massiveaction' => false,
             'datatype' => 'bool',
@@ -405,7 +405,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $header_end .= "<th class='center'>" . __('Type') . "</th>";
             $header_end .= "<th class='center'>" . __('Model') . "</th>";
             $header_end .= "<th class='center'>" . __('Cost') . "</th>";
-            $header_end .= "<th class='center'>" . __('Is out of stock', 'karastock') . "</th>";
+            $header_end .= "<th class='center'>" . __('Withdrawal', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Ticket') . "</th>";
             $header_end .= "<th class='center'>" . __('Comment') . "</th>";
             echo $header_begin . $header_top . $header_end . "</tr>";
@@ -643,7 +643,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
-        echo "<td class='left' width='$colsize1%'><label>" . __('Is out of stock') . "</label></td><td width='$colsize2%'>";
+        echo "<td class='left' width='$colsize1%'><label>" . __('Withdrawal') . "</label></td><td width='$colsize2%'>";
         $rand = Dropdown::showYesNo('is_withdrawaled', $this->fields['is_withdrawaled']);
             $params = [
                 'is_withdrawaled' => '__VALUE__',
