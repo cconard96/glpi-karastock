@@ -86,7 +86,7 @@ class PluginKarastockStock extends CommonDBTM {
         $query = "SELECT count(*) as 'count', `type`, `model`, o.is_received, o.`name` AS 'ordername'
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 AND o.is_received = 1 
+            WHERE is_withdrawaled = 0 AND o.is_received = 1 
             GROUP BY `type`,`model`
             
             UNION
@@ -94,7 +94,7 @@ class PluginKarastockStock extends CommonDBTM {
             SELECT count(*) as 'count', `type`, `model`, o.is_received, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 AND o.is_received = 0 
+            WHERE is_withdrawaled = 0 AND o.is_received = 0 
             GROUP BY `type`,`model` 
             ORDER BY `type`,`model`
         ";
@@ -137,7 +137,7 @@ class PluginKarastockStock extends CommonDBTM {
         $query = "SELECT count(*) as 'count', `type`, `model`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 AND o.`is_received` = 1 AND oi.type = '$type'
+            WHERE is_withdrawaled = 0 AND o.`is_received` = 1 AND oi.type = '$type'
             GROUP BY `type`,`model`
             
             UNION
@@ -145,7 +145,7 @@ class PluginKarastockStock extends CommonDBTM {
             SELECT count(*) as 'count', `type`, `model`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername' 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 AND o.`is_received` = 0 AND oi.type = '$type'
+            WHERE is_withdrawaled = 0 AND o.`is_received` = 0 AND oi.type = '$type'
             GROUP BY `type`,`model`
 
             ORDER BY `type`,`model`
@@ -190,7 +190,7 @@ class PluginKarastockStock extends CommonDBTM {
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o 
                 ON o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 
+            WHERE is_withdrawaled = 0 
                 AND o.`is_received` = 1 
                 AND oi.type = '$type' 
                 AND oi.model = '$model'
@@ -202,7 +202,7 @@ class PluginKarastockStock extends CommonDBTM {
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o 
                 ON o.`id` = oi.`plugin_karastock_orders_id` 
-            WHERE is_out_of_stock = 0 
+            WHERE is_withdrawaled = 0 
                 AND o.`is_received` = 0 
                 AND oi.type = '$type' 
                 AND oi.model = '$model'

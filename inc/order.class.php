@@ -218,7 +218,7 @@ class PluginKarastockOrder extends CommonDBTM {
             'table' => $this->getTable(),
             'field' => 'date',
             'name' => __('Order date', 'karastock'),
-            'datatype' => 'datetime',
+            'datatype' => 'date',
             'massiveaction' => false
         ];
 
@@ -227,7 +227,7 @@ class PluginKarastockOrder extends CommonDBTM {
             'table' => $this->getTable(),
             'field' => 'received_at',
             'name' => __('Received at', 'karastock'),
-            'datatype' => 'datetime',
+            'datatype' => 'date',
             'massiveaction' => true
         ];
 
@@ -245,7 +245,7 @@ class PluginKarastockOrder extends CommonDBTM {
             'table' => $this->getTable(),
             'field' => 'bill_received',
             'name' => __('Bill received at', 'karastock'),
-            'datatype' => 'datetime',
+            'datatype' => 'date',
             'massiveaction' => true
         ];
 

@@ -57,11 +57,11 @@ else if (array_key_exists('is_bill_received', $_POST) && $_POST['is_bill_receive
         ['value' => $_POST['bill_received_at']]
     );
 }
-else if (array_key_exists('is_out_of_stock', $_POST) && $_POST['is_out_of_stock']) {
+else if (array_key_exists('is_withdrawaled', $_POST) && $_POST['is_withdrawaled']) {
     
-    Html::showDateField('out_of_stock_at', 
+    Html::showDateField('withdrawal_at', 
         [
-            'value' => $_POST['out_of_stock_at'],
+            'value' => $_POST['withdrawal_at'],
             'required' => true
         ]
     );

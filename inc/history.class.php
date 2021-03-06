@@ -109,8 +109,8 @@ class PluginKarastockHistory extends CommonDBTM {
             LEFT JOIN $entitiesTable as e
                 ON t.$entitiesFK = e.id
 
-            WHERE oi.out_of_stock_at >= '$date1'
-            AND oi.out_of_stock_at <= '$date2'";
+            WHERE oi.withdrawal_at >= '$date1'
+            AND oi.withdrawal_at <= '$date2'";
         
         if($suppliers_id) {
 
@@ -145,7 +145,7 @@ class PluginKarastockHistory extends CommonDBTM {
             ($data['tickets_id'] > 0 ? $data['tickets_id'] : ""),
             ($data['tickets_id'] > 0 ? $data['entityname'] : ""),
             $data['comment'],
-            Html::convDate($data['out_of_stock_at']) 
+            Html::convDate($data['withdrawal_at']) 
         );
     }
 
