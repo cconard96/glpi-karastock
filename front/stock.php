@@ -37,27 +37,35 @@
 
 include("../../../inc/includes.php");
 
-Html::header(
-    __('Karastock', 'karastock'),
-    $_SERVER['PHP_SELF'],
-    'management',
-    'PluginKarastockMenu',
-    'stock'    
-);
-
 (new PluginKarastockStock)->checkGlobal(READ);
 
-if (isset($_GET["model"]) && isset($_GET["type"])) {
+if(array_key_exists('export', $_GET)) {
 
-    PluginKarastockStock::ShowModel($_GET["type"], $_GET["model"]);
-
-} else if (isset($_GET["type"])) {
-    
-    PluginKarastockStock::ShowType($_GET["type"]);
+    PluginKarastockStock::exportReport($_GET);
+    // Html::back();
 
 } else {
 
-    PluginKarastockStock::Show();
-}
+    Html::header(
+        __('Karastock', 'karastock'),
+        $_SERVER['PHP_SELF'],
+        'management',
+        'PluginKarastockMenu',
+        'stock'    
+    );
 
-Html::footer();
+    if (isset($_GET["model"]) && isset($_GET["type"])) {
+
+        PluginKarastockStock::ShowModel($_GET["type"], $_GET["model"]);
+
+    } else if (isset($_GET["type"])) {
+        
+        PluginKarastockStock::ShowType($_GET["type"]);
+
+    } else {
+
+        PluginKarastockStock::Show();
+    }
+    
+    Html::footer();
+}

@@ -80,9 +80,36 @@ class PluginKarastockStock extends CommonDBTM {
         return "fas fa-cubes";
     }
 
+    static function getFieldsName() {
+        return array(
+            __('Type'), 
+            __('Model'),
+            __('Quantity'),
+            __('Status'),
+            __('Cost'),
+            __('Ticket'),
+            __('Entity'),
+            __('Comment')
+        );
+    }
+
+    static function getFieldsValuesFromData($data) {
+        return array(
+            $data['ordername'],
+            $data['suppliername'],
+            PluginKarastockOrderItem::getTypes($data['type']),
+            $data['model'],
+            ($data['cost'] > 0 ? $data['cost'] : ""),
+            ($data['tickets_id'] > 0 ? $data['tickets_id'] : ""),
+            ($data['tickets_id'] > 0 ? $data['entityname'] : ""),
+            $data['comment'],
+            Html::convDate($data['withdrawal_at']) 
+        );
+    }
+
     static function show() {
         global $DB;
-        
+
         $query = "SELECT count(*) as 'count', `type`, `model`, o.is_received, o.`name` AS 'ordername'
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o on o.`id` = oi.`plugin_karastock_orders_id` 
@@ -100,6 +127,8 @@ class PluginKarastockStock extends CommonDBTM {
         ";
 
         $result = $DB->query($query);
+
+        self::showExportButton();
                 
         echo "<div class='center'>";
         echo "<table class='tab_cadre_fixehov'>";
@@ -242,5 +271,95 @@ class PluginKarastockStock extends CommonDBTM {
         }
         
         echo "</table></div>";
+    }       
+
+    private static function showExportButton() {
+        
+        $out = "<form method='get' name='form' style='margin:15px;' action='". self::getSearchURL(true) . "'><div class='center'>";
+        $out .= "<input type='hidden' name='export' value='true' />";
+
+        $out .= "<span class='responsive_hidden'>" . __('Export to CSV') . "</span>";
+        $out .= '<button type="submit" name="export" class="unstyled pointer" title="Exporter"><i class="far fa-save"></i><span class="sr-only">Exporter<span></button></div>';
+
+        // form using GET method : CRSF not needed
+        $out .= Html::closeForm(false);
+        echo $out;
+    }
+
+    public static function exportReport($params) {   
+        global $DB;
+        
+        $query = "SELECT count(*) as 'count', oi.`type`, oi.`model`, oi.`tickets_id`, oi.`cost`, oi.`comment`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername', e.`name` as 'entityname', s.name as 'suppliername'
+            FROM glpi_plugin_karastock_orderitems as oi 
+                
+            INNER JOIN glpi_plugin_karastock_orders as o 
+                ON o.`id` = oi.`plugin_karastock_orders_id`
+                
+            INNER JOIN glpi_suppliers as s 
+                ON o.suppliers_id = s.id 
+                
+            LEFT JOIN glpi_tickets as t 
+                ON oi.tickets_id = t.id 
+            
+            LEFT JOIN glpi_entities as e 
+                ON t.entities_id = e.id
+                
+            WHERE is_withdrawaled = 0
+            
+            GROUP BY `type`,`model`,oi.`plugin_karastock_orders_id`";
+
+        $result = $DB->query($query);
+
+        if($result) {
+
+            // filename
+            $filename = 'stock.csv';
+
+            // open file to write
+            $file = fopen($filename, 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // column names array
+            $columns =  array(
+                __('Type'), 
+                __('Model'),
+                __('Order', 'karastock'),
+                __('Supplier'),
+                __('Quantity'),
+                __('Status'),
+                __('Cost'),
+                __('Ticket'),
+                __('Comment')
+            );
+
+            // write the columns
+            fputcsv($file, $columns, ';');
+            
+            $number = $DB->numrows($result);            
+            
+            while ($data = $DB->fetchAssoc($result)) {
+
+                $row = array(
+                    PluginKarastockOrderItem::getTypes($data['type']),
+                    $data['model'],
+                    $data['ordername'],
+                    $data['suppliername'],
+                    $data['count'],
+                    $data['is_received'],
+                    ($data['cost'] > 0 ? $data['cost'] : ""),
+                    ($data['tickets_id'] > 0 ? $data['tickets_id'] : ""),
+                    $data['comment']
+                );  
+
+                // write the data
+                fputcsv($file, $row, ';');
+            }
+
+            fclose($file);
+        
+            header('Content-type: text/csv; charset=utf-8');
+            header('Content-disposition:attachment; filename="'.$filename.'"');
+            readfile($filename);
+        }   
     }
 }

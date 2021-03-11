@@ -403,9 +403,5 @@ class PluginKarastockOrder extends CommonDBTM {
         }
         
         $this->showFormButtons($options);
-    }
-
-    static function showDateTime($name, $options) {
-
-    }
+    }    
 }   

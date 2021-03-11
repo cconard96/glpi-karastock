@@ -3,4 +3,4 @@ vendor/
 .gh_token
 *.min.*
 test/
-front/history.csv
+front/*.csv
