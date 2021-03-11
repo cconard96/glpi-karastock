@@ -7,24 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-06 23:23+0100\n"
-"PO-Revision-Date: 2021-03-06 23:34+0100\n"
+"POT-Creation-Date: 2021-03-11 21:47+0100\n"
+"PO-Revision-Date: 2021-03-11 21:50+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
-"Last-Translator: \n"
-"Language: fr_FR\n"
+
+#: ajax/datetime_dropdown.php:61 inc/order.class.php:274
+#: inc/order.class.php:420
+msgid "Bill ID"
+msgstr "Numéro de facture"
 
 #: front/history.php:50 front/menu.php:42 front/order.form.php:96
-#: front/order.php:41 front/stock.php:41 inc/profile.class.php:113
+#: front/order.php:41 front/stock.php:50 inc/profile.class.php:113
 msgid "Karastock"
 msgstr "Karastock"
 
-#: front/menu.php:52 inc/history.class.php:177 inc/stock.class.php:106
-#: inc/stock.class.php:158 inc/stock.class.php:218
+#: front/menu.php:52 inc/history.class.php:177 inc/stock.class.php:135
+#: inc/stock.class.php:187 inc/stock.class.php:247
 msgid "Stock management"
 msgstr "Gestion des stocks"
 
@@ -40,46 +45,47 @@ msgstr "Stock"
 msgid "History"
 msgstr "Historique"
 
-#: inc/history.class.php:126 inc/order.class.php:150 inc/stock.class.php:222
+#: inc/history.class.php:126 inc/order.class.php:159 inc/stock.class.php:251
+#: inc/stock.class.php:326
 msgid "Order"
 msgid_plural "Orders"
 msgstr[0] "Commande"
-msgstr[1] ""
+msgstr[1] "Commandes"
 
 #: inc/history.class.php:134
 msgid "Withdrawal at"
 msgstr "Sortie des stocks le"
 
-#: inc/order.class.php:200 inc/order.class.php:306
+#: inc/order.class.php:209 inc/order.class.php:324
 msgid "Order Number"
 msgstr "Numéro de commande"
 
-#: inc/order.class.php:220 inc/order.class.php:342
+#: inc/order.class.php:229 inc/order.class.php:360
 msgid "Order date"
 msgstr "Date de commande"
 
-#: inc/order.class.php:229
+#: inc/order.class.php:238
 msgid "Received at"
 msgstr "Reçu le"
 
-#: inc/order.class.php:238 inc/order.class.php:359
+#: inc/order.class.php:247 inc/order.class.php:377
 msgid "Received"
 msgstr "Reçu"
 
-#: inc/order.class.php:247
+#: inc/order.class.php:256
 msgid "Bill received at"
 msgstr "Facture reçue le"
 
-#: inc/order.class.php:256 inc/order.class.php:380
+#: inc/order.class.php:265 inc/order.class.php:398
 msgid "Bill received"
 msgstr "Facture reçue"
 
-#: inc/order.class.php:294
+#: inc/order.class.php:312
 #, php-format
 msgid "%1$s - ID %2$d"
 msgstr "%1$s - ID %2$d"
 
-#: inc/order.class.php:317
+#: inc/order.class.php:335
 msgid "Other ID"
 msgstr "Autre identifiant"
 
@@ -118,7 +124,7 @@ msgstr "Tarif"
 msgid "Item Count"
 msgstr "Quantité"
 
-#: inc/stock.class.php:225
+#: inc/stock.class.php:254
 msgid "Quantity"
 msgstr "Quantité"
 

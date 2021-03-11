@@ -102,6 +102,15 @@ class PluginKarastockOrder extends CommonDBTM {
             $DB->query($query) or die("populating display preferences " . $DB->error());
         }
 
+        if(!$DB->fieldExists($table, 'bill_id')) {
+
+            $migration->displayMessage(sprintf(__("Updaating %s"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `bill_id` varchar(255) collate utf8_unicode_ci default NULL;";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
+        }
+
         return true;
     }
 
@@ -243,7 +252,7 @@ class PluginKarastockOrder extends CommonDBTM {
         $tab[] = [
             'id' => '7',
             'table' => $this->getTable(),
-            'field' => 'bill_received',
+            'field' => 'bill_received_at',
             'name' => __('Bill received at', 'karastock'),
             'datatype' => 'date',
             'massiveaction' => true
@@ -252,10 +261,19 @@ class PluginKarastockOrder extends CommonDBTM {
         $tab[] = [
             'id' => '8',
             'table' => $this->getTable(),
-            'field' => 'bill_received',
+            'field' => 'is_bill_received',
             'name' => __('Bill received', 'karastock'),
             'datatype' => 'bool',
             'massiveaction' => true
+        ];
+
+        $tab[] = [
+            'id' => '9',
+            'table' => $this->getTable(),
+            'field' => 'bill_id',
+            'name' => __('Bill ID', 'karastock'),
+            'datatype' => 'contains',
+            'massiveaction' => false
         ];
 
         $tab = array_merge(
@@ -383,7 +401,8 @@ class PluginKarastockOrder extends CommonDBTM {
             $rand = Dropdown::showYesNo('is_bill_received', $this->fields['is_bill_received']);
             $params = [
                 'is_bill_received' => '__VALUE__',
-                'bill_received_at' => $this->fields['bill_received_at']
+                'bill_received_at' => $this->fields['bill_received_at'],
+                'bill_id'   => $this->fields['bill_id']
             ];
 
             Ajax::updateItemOnSelectEvent(
@@ -397,6 +416,10 @@ class PluginKarastockOrder extends CommonDBTM {
             echo "<div id='bill_received_div'>";
             if ($this->fields['is_bill_received']) { 
                 Html::showDateField('bill_received_at', $opt);
+                echo sprintf(
+                    "<input type='text' placeholder='" . __('Bill ID', 'karastok') . "' style='width:95%%; margin-top: 5px;' maxlength=250 name='bill_id' value=\"%1\$s\"/>",
+                    $this->fields['bill_id']
+                );
             }
             echo "</div>";
             echo "</td></tr>";

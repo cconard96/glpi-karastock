@@ -56,6 +56,11 @@ else if (array_key_exists('is_bill_received', $_POST) && $_POST['is_bill_receive
     Html::showDateField('bill_received_at', 
         ['value' => $_POST['bill_received_at']]
     );
+
+    echo sprintf(
+        "<input type='text' placeholder='" . __('Bill ID', 'karastok') . "' style='width:95%%; margin-top: 5px;' maxlength=250 name='bill_id' value=\"%1\$s\"/>",
+        $_POST['bill_id']
+    );
 }
 else if (array_key_exists('is_withdrawaled', $_POST) && $_POST['is_withdrawaled']) {
     

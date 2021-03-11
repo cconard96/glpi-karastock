@@ -228,7 +228,7 @@ class PluginKarastockProfile extends Profile {
                 "`name` = '" . $data['field'] . "'"
             ) == 0) {
 
-                ProfileRight::addProfileRights([$data['field']]);
+                //ProfileRight::addProfileRights([$data['field']]);
             }
         }
 
