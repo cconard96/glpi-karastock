@@ -285,6 +285,33 @@ class PluginKarastockOrder extends CommonDBTM {
     }
 
     /**
+    * Get default values to search engine to override
+    **/
+    static function getDefaultSearchRequest() {
+
+        $search = ['criteria' =>
+                    [
+                        0 => [
+                            'field'      => 6,
+                            'searchtype' => 'equals',
+                            'value'      => '0'
+                        ],
+                        1 => [
+                            'field'      => 8,
+                            'searchtype' => 'equals',
+                            'link'       => 'OR',
+                            'value'      => '0'
+                        ]
+                    ],
+
+                    'sort'     => 4,
+                    'order'    => 'DESC'
+                ];
+
+        return $search;
+    }
+
+    /**
      * Show the current (or new) object formulaire
      * 
      * @param Integer $ID
