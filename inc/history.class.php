@@ -186,7 +186,7 @@ class PluginKarastockHistory extends CommonDBTM {
 
             $number = $DB->numrows($result);            
             
-            while ($data = $DB->fetch_assoc($result)) {                
+            while ($data = $DB->fetchAssoc($result)) {                
 
                 echo "<tr>";
                 foreach(static::getFieldsValuesFromData($data) as $value) {
@@ -300,7 +300,7 @@ class PluginKarastockHistory extends CommonDBTM {
             
             $number = $DB->numrows($result);            
             
-            while ($data = $DB->fetch_assoc($result)) {
+            while ($data = $DB->fetchAssoc($result)) {
 
                 $row = self::getFieldsValuesFromData($data);  
 

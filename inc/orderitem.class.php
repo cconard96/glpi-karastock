@@ -410,7 +410,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $header_end .= "<th class='center'>" . __('Comment') . "</th>";
             echo $header_begin . $header_top . $header_end . "</tr>";
 
-            while ($data = $DB->fetch_assoc($result)) {
+            while ($data = $DB->fetchAssoc($result)) {
 
                 echo "<tr class='tab_bg_1'>";
 
