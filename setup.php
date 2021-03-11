@@ -26,10 +26,10 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_KARASTOCK_VERSION', '1.0');
+define('PLUGIN_KARASTOCK_VERSION', '1.1');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_KARASTOCK_MIN_GLPI", "9.5");
+define("PLUGIN_KARASTOCK_MIN_GLPI", "9.5.4");
 // Maximum GLPI version, exclusive
 define("PLUGIN_KARASTOCK_MAX_GLPI", "9.6");
 
@@ -70,7 +70,7 @@ function plugin_init_karastock() {
  */
 function plugin_version_karastock() {
    return [
-      'name'           => 'Stock & Orders Management (Karastock)',
+      'name'           => 'Karastock',
       'version'        => PLUGIN_KARASTOCK_VERSION,
       'author'         => '<a href="http://www.phoen-ix.fr">Karhel</a>',
       'license'        => 'GPLV3+',
