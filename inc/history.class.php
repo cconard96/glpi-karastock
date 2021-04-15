@@ -94,7 +94,7 @@ class PluginKarastockHistory extends CommonDBTM {
         $orderItemsTable    = PluginKarastockOrderItem::getTable();
         $orderItemsFK       = PluginKarastockOrderItem::getForeignKeyField();
     
-        $query = "SELECT oi.*, o.name as 'ordername', o.suppliers_id, s.name as 'suppliername', e.name as 'entityname', o.bill_id, o.bill_received_at
+        $query = "SELECT oi.*, o.name as 'ordername', o.date as 'date', o.suppliers_id, s.name as 'suppliername', e.name as 'entityname', o.bill_id, o.bill_received_at
             FROM $orderItemsTable as oi
             
             INNER JOIN $ordersTable as o
@@ -124,6 +124,7 @@ class PluginKarastockHistory extends CommonDBTM {
     static function getFieldsName() {
         return array(
             __('Order', 'karastock'), 
+            __('Order date', 'karastock'), 
             __('Supplier'),
             __('Type'),
             __('Model'),
@@ -140,6 +141,7 @@ class PluginKarastockHistory extends CommonDBTM {
     static function getFieldsValuesFromData($data) {
         return array(
             $data['ordername'],
+            Html::convDate($data['date']) ,
             $data['suppliername'],
             PluginKarastockOrderItem::getTypes($data['type']),
             $data['model'],
