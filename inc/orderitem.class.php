@@ -224,6 +224,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         $tab[] = [
             'id' => '5',
+            'table' => self::getTable(),
+            'field' => 'withdrawal_at',
+            'name' => __('Withdrawal at', 'karastock'),
+            'datatype' => 'date',
+            'massiveaction' => true,
+        ];
+
+        $tab[] = [
+            'id' => '6',
             'table' => $this->getTable(),
             'field' => 'cost',
             'name' => __('Cost'),
@@ -232,7 +241,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
         ];
 
         $tab[] = [
-            'id' => '6',
+            'id' => '7',
             'table' => $this->getTable(),
             'field' => 'tickets_id',
             'name' => __('Ticket'),
@@ -241,7 +250,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
         ];
 
         $tab[] = [
-            'id' => '7',
+            'id' => '8',
             'table' => $this->getTable(),
             'field' => 'comment',
             'name' => __('Comment'),
@@ -290,7 +299,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             'field' => 'is_withdrawaled',
             'name' => __('Withdrawal', 'karastock'),
             'forcegroupby' => true,
-            'massiveaction' => false,
+            'massiveaction' => true,
             'datatype' => 'bool',
             'searchtype' => ['equals', 'notequals']
         ];
@@ -643,7 +652,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
-        echo "<td class='left' width='$colsize1%'><label>" . __('Withdrawal') . "</label></td><td width='$colsize2%'>";
+        echo "<td class='left' width='$colsize1%'><label>" . __('Withdrawal', 'karastock') . "</label></td><td width='$colsize2%'>";
         $rand = Dropdown::showYesNo('is_withdrawaled', $this->fields['is_withdrawaled']);
             $params = [
                 'is_withdrawaled' => '__VALUE__',
