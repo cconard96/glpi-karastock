@@ -94,7 +94,7 @@ class PluginKarastockHistory extends CommonDBTM {
         $orderItemsTable    = PluginKarastockOrderItem::getTable();
         $orderItemsFK       = PluginKarastockOrderItem::getForeignKeyField();
     
-        $query = "SELECT oi.*, o.name as 'ordername', o.suppliers_id, s.name as 'suppliername', e.name as 'entityname'
+        $query = "SELECT oi.*, o.name as 'ordername', o.suppliers_id, s.name as 'suppliername', e.name as 'entityname', o.bill_id, o.bill_received_at
             FROM $orderItemsTable as oi
             
             INNER JOIN $ordersTable as o
@@ -131,7 +131,9 @@ class PluginKarastockHistory extends CommonDBTM {
             __('Ticket'),
             __('Entity'),
             __('Comment'),
-            __('Withdrawal at', 'karastock')
+            __('Withdrawal at', 'karastock'),
+            __('Invoice number', 'karastock'),
+            __('Invoice date', 'karastock')
         );
     }
 
@@ -145,7 +147,9 @@ class PluginKarastockHistory extends CommonDBTM {
             ($data['tickets_id'] > 0 ? $data['tickets_id'] : ""),
             ($data['tickets_id'] > 0 ? $data['entityname'] : ""),
             $data['comment'],
-            Html::convDate($data['withdrawal_at']) 
+            Html::convDate($data['withdrawal_at']) ,
+            $data['bill_id'],
+            Html::convDate($data['bill_received_at'])
         );
     }
 
@@ -174,7 +178,7 @@ class PluginKarastockHistory extends CommonDBTM {
 
         echo "<div class='center'>";
         echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr><th colspan='9' class='center'>" . __("Stock management", "karastock") . "</th></tr>";
+        echo "<tr><th colspan='". count(self::getFieldsName()) ."' class='center'>" . __("Stock management", "karastock") . "</th></tr>";
 
         if($result) {
 
