@@ -175,6 +175,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
             ->addStandardTab(PluginKarastockOrderItem::class, $ong, $options)
 
+            ->addStandardTab('Document_Item', $ong, $options)
             ->addStandardTab('Notepad', $ong, $options)
             ->addStandardTab('Log', $ong, $options);
 
