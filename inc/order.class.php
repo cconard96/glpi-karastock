@@ -104,7 +104,7 @@ class PluginKarastockOrder extends CommonDBTM {
 
         if(!$DB->fieldExists($table, 'bill_id')) {
 
-            $migration->displayMessage(sprintf(__("Updaating %s"), $table));
+            $migration->displayMessage(sprintf(__("Updating %s"), $table));
             $query = "ALTER TABLE `$table`
                 ADD `bill_id` varchar(255) collate utf8_unicode_ci default NULL;";
             

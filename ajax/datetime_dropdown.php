@@ -62,13 +62,20 @@ else if (array_key_exists('is_bill_received', $_POST) && $_POST['is_bill_receive
         $_POST['bill_id']
     );
 }
-else if (array_key_exists('is_withdrawaled', $_POST) && $_POST['is_withdrawaled']) {
+else if (array_key_exists('is_withdrawaled', $_POST)) {
+
+    if($_POST['is_withdrawaled']) {
     
-    Html::showDateField('withdrawal_at', 
-        [
-            'value' => $_POST['withdrawal_at'],
-            'required' => true
-        ]
-    );
+        Html::showDateField('withdrawal_at', 
+            [
+                'value' => $_POST['withdrawal_at'],
+                'required' => true
+            ]
+        );
+    }
+    else {
+
+        Location::dropdown(['value'  => $_POST['locations_id']]);
+    }
 }
 else { echo ''; }

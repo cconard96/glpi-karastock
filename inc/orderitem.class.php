@@ -92,6 +92,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
             ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
+        }        
+
+        if(!$DB->fieldExists($table, 'locations_id')) {
+
+            $migration->displayMessage(sprintf(__("Updating %s - adding Location_ID Field"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)'";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
         }
     }
 
@@ -126,8 +135,6 @@ class PluginKarastockOrderItem extends CommonDBChild {
     {
         return _n('Order item', 'Order items', $nb, 'karastock');
     }
-
-
     
     //! @copydoc CommonGLPI::getTabNameForItem($item, $withtemplate)
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -258,6 +265,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
             'massiveaction' => true
         ];
 
+        $tab[] = [
+            'id' => '7',
+            'table' => $this->getTable(),
+            'field' => 'locations_id',
+            'name' => __('Location'),
+            'searchtype' => 'specific',
+            'massiveaction' => true
+        ];
+
         return $tab;
     }
 
@@ -278,6 +294,11 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 return Ticket::dropdown([                    
                     'displaywith' => ['id'],
                     'condition'   => Ticket::getOpenCriteria(),
+                ]);
+            case $this->getTable() . '.locations_id':
+                $options['display'] = false;
+                return Location::dropdown([                    
+                    'displaywith' => ['id']
                 ]);
 
             default:
@@ -656,7 +677,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
         $rand = Dropdown::showYesNo('is_withdrawaled', $this->fields['is_withdrawaled']);
             $params = [
                 'is_withdrawaled' => '__VALUE__',
-                'withdrawal_at' => $this->fields['withdrawal_at']
+                'withdrawal_at' => $this->fields['withdrawal_at'],
+                'locations_id' => $this->fields['locations_id']
             ];
 
             Ajax::updateItemOnSelectEvent(
@@ -670,6 +692,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
             echo "<div id='withdrawal_div'>";
             if ($this->fields['is_withdrawaled']) { 
                 Html::showDateField('withdrawal_at', $opt);
+            }else {
+                Location::dropdown(['value'  => $this->fields['locations_id']]);
             }
             echo "</div>";
 
