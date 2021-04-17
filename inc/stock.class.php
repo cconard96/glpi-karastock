@@ -215,7 +215,7 @@ class PluginKarastockStock extends CommonDBTM {
 
         global $DB;
         
-        $query = "SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername'
+        $query = "SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername', `locations_id`
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o 
                 ON o.`id` = oi.`plugin_karastock_orders_id` 
@@ -223,11 +223,11 @@ class PluginKarastockStock extends CommonDBTM {
                 AND o.`is_received` = 1 
                 AND oi.type = '$type' 
                 AND oi.model = '$model'
-            GROUP BY plugin_karastock_orders_id
+            GROUP BY plugin_karastock_orders_id,locations_id
                         
             UNION
             
-            SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername' 
+            SELECT count(*) as 'count', `type`, `model`, `tickets_id`, `plugin_karastock_orders_id`, o.`is_received`, o.`name` AS 'ordername', `locations_id` 
             FROM glpi_plugin_karastock_orderitems as oi 
             INNER JOIN glpi_plugin_karastock_orders as o 
                 ON o.`id` = oi.`plugin_karastock_orders_id` 
@@ -235,7 +235,7 @@ class PluginKarastockStock extends CommonDBTM {
                 AND o.`is_received` = 0 
                 AND oi.type = '$type' 
                 AND oi.model = '$model'
-            GROUP BY plugin_karastock_orders_id
+            GROUP BY plugin_karastock_orders_id,locations_id
 
             ORDER BY `type`,`model`
         ";
@@ -244,7 +244,7 @@ class PluginKarastockStock extends CommonDBTM {
                 
         echo "<div class='center'>";
         echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr><th colspan='5' class='center'>" . __("Stock management", "karastock") . " - " . __('Type')  . " : ". $type . " - " . __('Model') . " : " . $model . "</th></tr>";
+        echo "<tr><th colspan='6' class='center'>" . __("Stock management", "karastock") . " - " . __('Type')  . " : ". $type . " - " . __('Model') . " : " . $model . "</th></tr>";
 
         if($result) {
 
@@ -252,7 +252,8 @@ class PluginKarastockStock extends CommonDBTM {
             echo "<th class='center'>" . __('Type') . "</th>";
             echo "<th class='center'>" . __('Model') . "</th>";
             echo "<th class='center'>" . __('Quantity', 'karastock') . "</th>";
-            echo "<th class='center'>" . __('Status') . "</th></tr>";
+            echo "<th class='center'>" . __('Status') . "</th>";
+            echo "<th class='center'>" . __('Location') . "</th></tr>";
 
             $number = $DB->numrows($result);            
             
@@ -266,7 +267,17 @@ class PluginKarastockStock extends CommonDBTM {
                     ($data['is_received'] == 1 
                     ? "<i class='fas fa-check'></i>" 
                     : "<i class='fas fa-shipping-fast'></i>" ) 
-                . "</td></tr>";
+                . "</td>";                
+                echo "<td class='center'>";
+                
+                $loc = new Location(); 
+                if($data['locations_id'] > 0 
+                    && $loc->getFromDB($data['locations_id'])) {
+
+                    echo $loc->fields['name'];
+                }
+                
+                echo "</td></tr>";
             }
         }
         

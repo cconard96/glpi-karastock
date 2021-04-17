@@ -455,11 +455,24 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 : '') . ">" .  self::getTypes(__($data['type'])) . "</td>";
                 echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['cost'] . "</td>";
-                echo "<td class='center'>" . 
-                    ($data['is_withdrawaled'] == 1 ? 
-                        __('Yes at', 'karastock') . ' ' . Html::convDate($data['withdrawal_at'])  :
-                        __('No')) . 
-                    "</td>";
+                echo "<td class='center'>";
+                
+                if($data['is_withdrawaled'] == 1) { 
+                    echo __('Yes at', 'karastock') . ' ' . Html::convDate($data['withdrawal_at']);
+                }
+                else {  
+                    
+                    $loc = new Location(); 
+                    if($data['locations_id'] > 0 
+                        && $loc->getFromDB($data['locations_id'])) {
+
+                        echo __('No, in', 'karastock') . ' ' . $loc->fields['name'];
+                    }
+
+                    echo __('No');
+                }
+
+                echo "</td>";
 
                 echo "<td class='center'>";
                 $ticketId = $data['tickets_id'];
