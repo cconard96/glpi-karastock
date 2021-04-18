@@ -101,6 +101,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)'";
             
             $DB->query($query) or die("error updating $table schema " . $DB->error());
+        }            
+
+        if(!$DB->fieldExists($table, 'device_id')) {
+
+            $migration->displayMessage(sprintf(__("Updating %s - adding Device_ID Field"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `device_id` int(11) NOT NULL default '0' COMMENT 'RELATION to devices tables (item_type) (id)'";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
         }
     }
 
@@ -653,9 +662,22 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item type', 'karastock') . "</label></td><td width='$colsize2%'>";        
-        self::typesDropdown('type', [
+        $randtype = self::typesDropdown("type", [
             'value' => $this->fields['type']
         ]);
+
+        $params = [
+            'type' => '__VALUE__',
+            'device_id' => $this->fields['device_id']
+        ];
+
+        Ajax::updateItemOnSelectEvent(
+            "dropdown_type$randtype",
+            "device_id",
+            "../ajax/orderitem_itemtype_dropdown.php",
+            $params
+        );
+
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -718,6 +740,14 @@ class PluginKarastockOrderItem extends CommonDBChild {
         Html::autocompletionTextField($this, 'comment');
         echo "</td></tr>";
 
+        
+        echo "<tr class='tab_bg_1'>";
+        echo "<td class='left' width='$colsize1%'><label>" . __('Device', 'karastock') . "</label></td><td width='$colsize2%'>";   
+        echo "<span id='device_id'>";
+        self::showDeviceForm($this->fields);
+        echo "</span>";
+        echo "</td></tr>";
+
         echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";        
         echo "<input type='hidden' name='id' value='".$this->fields['id']."' />";
         echo "<input type='submit' name='update' value=\"" . _sx('button', 'Edit') . "\" class='submit'>";
@@ -736,6 +766,19 @@ class PluginKarastockOrderItem extends CommonDBChild {
         }
 
         $orderitem->update($_POST);  
+    }
+
+    public static function showDeviceForm($POST) {
+        $itemtype = $POST['type'];
+        $table = getTableForItemType($itemtype);
+        if(class_exists($itemtype) && method_exists(new $itemtype(), 'Dropdown')) {
+            $itemtype::Dropdown([
+                'name' => 'device_id',
+                'value' =>  $POST['device_id']
+            ]);
+        } else {
+            echo __('No GLPI type found for this item type. Set indications in comments or model fields', 'karastock');
+        }
     }
 }
 
