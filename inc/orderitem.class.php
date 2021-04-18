@@ -477,8 +477,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
                         echo __('No, in', 'karastock') . ' ' . $loc->fields['name'];
                     }
-
-                    echo __('No');
+                    else { echo __('No'); }
                 }
 
                 echo "</td>";
