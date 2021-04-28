@@ -446,6 +446,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $header_end .= "<th class='center'>" . __('Cost') . "</th>";
             $header_end .= "<th class='center'>" . __('Withdrawal', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Ticket') . "</th>";
+            $header_end .= "<th class='center'>" . __('Device', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Comment') . "</th>";
             echo $header_begin . $header_top . $header_end . "</tr>";
 
@@ -490,6 +491,11 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
                     echo "<a href='". $ticket->getLinkURL() ."'>" . $ticketId . "</a>";
                 }
+                echo "</td>";
+
+                
+                echo "<td class='center'>";
+                self::getDeviceName($data, true);
                 echo "</td>";
 
                 echo "<td class='center'>" . $data['comment'] . "</td>";
@@ -771,6 +777,27 @@ class PluginKarastockOrderItem extends CommonDBChild {
         } else {
             echo __('No GLPI type found for this item type. Set indications in comments or model fields', 'karastock');
         }
+    }
+
+    public static function getDeviceName($POST, $show = false) {
+        $itemtype = $POST['type'];
+        $table = getTableForItemType($itemtype);
+
+        $result = "";
+
+        if($POST['device_id'] && class_exists($itemtype) && method_exists(new $itemtype(), 'getFromDB')) {
+
+            $obj = new $itemtype();
+            $obj->getFromDB($POST['device_id']);
+
+            $result = $obj->fields['name'];
+        }           
+
+        if(!$show) {
+            return $result;
+        }
+
+        echo $result;
     }
 }
 
