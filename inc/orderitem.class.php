@@ -657,7 +657,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='headerRow'>";
-        echo "<th colspan='4'>Adding new Item(s)</th></tr>";
+        echo "<th colspan='4'>Editing item</th></tr>";
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item type', 'karastock') . "</label></td><td width='$colsize2%'>";        
@@ -677,6 +677,12 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $params
         );
 
+        echo "</td>";
+        
+        echo "<td class='left' width='$colsize1%'><label>" . __('Device', 'karastock') . "</label></td><td width='$colsize2%'>";   
+        echo "<span id='device_id'>";
+        self::showDeviceForm($this->fields);
+        echo "</span>";
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -688,10 +694,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Cost', 'karastock') . "</label></td><td width='$colsize2%'>";
         Html::autocompletionTextField($this, 'cost');
-        echo "</td></tr>";
-
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
+        echo "</td>";
+        
         echo "<td class='left' width='$colsize1%'><label>" . __('Ticket') . "</label></td><td width='$colsize2%'>";
         Ticket::dropdown([
             'displaywith' => ['id'],
@@ -731,23 +735,12 @@ class PluginKarastockOrderItem extends CommonDBChild {
             }
             echo "</div>";
 
-        echo "</td></tr>";
-
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
+        echo "</td>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Comment') . "</label></td><td width='$colsize2%'>";
         Html::autocompletionTextField($this, 'comment');
         echo "</td></tr>";
 
-        
-        echo "<tr class='tab_bg_1'>";
-        echo "<td class='left' width='$colsize1%'><label>" . __('Device', 'karastock') . "</label></td><td width='$colsize2%'>";   
-        echo "<span id='device_id'>";
-        self::showDeviceForm($this->fields);
-        echo "</span>";
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";        
+        echo "<tr class='tab_bg_1'><td class='center' colspan='4'>";        
         echo "<input type='hidden' name='id' value='".$this->fields['id']."' />";
         echo "<input type='submit' name='update' value=\"" . _sx('button', 'Edit') . "\" class='submit'>";
         echo "</td></tr>";
