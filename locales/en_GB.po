@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wamp 64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-15 18:34+0200\n"
-"PO-Revision-Date: 2021-04-15 18:34+0200\n"
+"POT-Creation-Date: 2021-04-28 22:24+0200\n"
+"PO-Revision-Date: 2021-04-28 22:24+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ajax/datetime_dropdown.php:61 inc/order.class.php:274
-#: inc/order.class.php:447
+#: ajax/datetime_dropdown.php:61 inc/order.class.php:275
+#: inc/order.class.php:448
 msgid "Bill ID"
 msgstr "Bill ID"
 
@@ -27,7 +27,7 @@ msgstr "Bill ID"
 msgid "Karastock"
 msgstr "Karastock"
 
-#: front/menu.php:52 inc/history.class.php:183 inc/stock.class.php:135
+#: front/menu.php:52 inc/history.class.php:185 inc/stock.class.php:135
 #: inc/stock.class.php:187 inc/stock.class.php:247
 msgid "Stock management"
 msgstr "Stock management"
@@ -45,91 +45,108 @@ msgid "History"
 msgstr "History"
 
 #: inc/history.class.php:126 inc/order.class.php:159 inc/stock.class.php:251
-#: inc/stock.class.php:326
+#: inc/stock.class.php:337
 msgid "Order"
 msgid_plural "Orders"
 msgstr[0] "Order"
 msgstr[1] "Orders"
 
-#: inc/history.class.php:127 inc/order.class.php:229 inc/order.class.php:387
+#: inc/history.class.php:127 inc/order.class.php:230 inc/order.class.php:388
 msgid "Order date"
 msgstr "Order date"
 
-#: inc/history.class.php:135 inc/orderitem.class.php:229
+#: inc/history.class.php:133 inc/orderitem.class.php:449
+#: inc/orderitem.class.php:688
+msgid "Device"
+msgstr "Device"
+
+#: inc/history.class.php:136 inc/orderitem.class.php:245
 msgid "Withdrawal at"
 msgstr "Withdrawal at"
 
-#: inc/history.class.php:136
+#: inc/history.class.php:137
 msgid "Invoice number"
 msgstr "Invoice number"
 
-#: inc/history.class.php:137
+#: inc/history.class.php:138
 msgid "Invoice date"
 msgstr "Invoice date"
 
-#: inc/order.class.php:209 inc/order.class.php:351
+#: inc/order.class.php:210 inc/order.class.php:352
 msgid "Order Number"
 msgstr "Order Number"
 
-#: inc/order.class.php:238
+#: inc/order.class.php:239
 msgid "Received at"
 msgstr "Received at"
 
-#: inc/order.class.php:247 inc/order.class.php:404
+#: inc/order.class.php:248 inc/order.class.php:405
 msgid "Received"
 msgstr "Received"
 
-#: inc/order.class.php:256
+#: inc/order.class.php:257
 msgid "Bill received at"
 msgstr "Bill received at"
 
-#: inc/order.class.php:265 inc/order.class.php:425
+#: inc/order.class.php:266 inc/order.class.php:426
 msgid "Bill received"
 msgstr "Bill received"
 
-#: inc/order.class.php:339
+#: inc/order.class.php:340
 #, php-format
 msgid "%1$s - ID %2$d"
 msgstr "%1$s - ID %2$d"
 
-#: inc/order.class.php:362
+#: inc/order.class.php:363
 msgid "Other ID"
 msgstr "Other ID"
 
-#: inc/orderitem.class.php:127
+#: inc/orderitem.class.php:145
 msgid "Order item"
 msgid_plural "Order items"
 msgstr[0] "Order item"
 msgstr[1] "Order items"
 
-#: inc/orderitem.class.php:219 inc/orderitem.class.php:300
-#: inc/orderitem.class.php:417 inc/orderitem.class.php:655
+#: inc/orderitem.class.php:235 inc/orderitem.class.php:330
+#: inc/orderitem.class.php:447 inc/orderitem.class.php:720
 msgid "Withdrawal"
 msgstr "Withdrawal"
 
-#: inc/orderitem.class.php:381
+#: inc/orderitem.class.php:411
 msgid "Add new items to this Order"
 msgstr "Add new items to this Order"
 
-#: inc/orderitem.class.php:439
+#: inc/orderitem.class.php:471
 msgid "Yes at"
 msgstr "Yes at"
 
-#: inc/orderitem.class.php:552 inc/orderitem.class.php:621
+#: inc/orderitem.class.php:479
+msgid "No, in"
+msgstr "No, in"
+
+#: inc/orderitem.class.php:600 inc/orderitem.class.php:669
 msgid "Item type"
 msgstr "Item type"
 
-#: inc/orderitem.class.php:557 inc/orderitem.class.php:628
+#: inc/orderitem.class.php:605 inc/orderitem.class.php:695
 msgid "Item Model"
 msgstr "Item Model"
 
-#: inc/orderitem.class.php:565 inc/orderitem.class.php:634
+#: inc/orderitem.class.php:613 inc/orderitem.class.php:701
 msgid "Item Cost"
 msgstr "Item Cost"
 
-#: inc/orderitem.class.php:572
+#: inc/orderitem.class.php:620
 msgid "Item Count"
 msgstr "Item Count"
+
+#: inc/orderitem.class.php:778
+msgid ""
+"No GLPI type found for this item type. Set indications in comments or model "
+"fields"
+msgstr ""
+"No GLPI type found for this item type. Set indications in comments or model "
+"fields"
 
 #: inc/stock.class.php:254
 msgid "Quantity"
