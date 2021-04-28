@@ -92,6 +92,24 @@ class PluginKarastockOrderItem extends CommonDBChild {
             ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
+        }        
+
+        if(!$DB->fieldExists($table, 'locations_id')) {
+
+            $migration->displayMessage(sprintf(__("Updating %s - adding Location_ID Field"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `locations_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_locations (id)'";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
+        }            
+
+        if(!$DB->fieldExists($table, 'device_id')) {
+
+            $migration->displayMessage(sprintf(__("Updating %s - adding Device_ID Field"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `device_id` int(11) NOT NULL default '0' COMMENT 'RELATION to devices tables (item_type) (id)'";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
         }
     }
 
@@ -126,8 +144,6 @@ class PluginKarastockOrderItem extends CommonDBChild {
     {
         return _n('Order item', 'Order items', $nb, 'karastock');
     }
-
-
     
     //! @copydoc CommonGLPI::getTabNameForItem($item, $withtemplate)
     function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -258,6 +274,15 @@ class PluginKarastockOrderItem extends CommonDBChild {
             'massiveaction' => true
         ];
 
+        $tab[] = [
+            'id' => '7',
+            'table' => $this->getTable(),
+            'field' => 'locations_id',
+            'name' => __('Location'),
+            'searchtype' => 'specific',
+            'massiveaction' => true
+        ];
+
         return $tab;
     }
 
@@ -278,6 +303,11 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 return Ticket::dropdown([                    
                     'displaywith' => ['id'],
                     'condition'   => Ticket::getOpenCriteria(),
+                ]);
+            case $this->getTable() . '.locations_id':
+                $options['display'] = false;
+                return Location::dropdown([                    
+                    'displaywith' => ['id']
                 ]);
 
             default:
@@ -416,6 +446,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
             $header_end .= "<th class='center'>" . __('Cost') . "</th>";
             $header_end .= "<th class='center'>" . __('Withdrawal', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Ticket') . "</th>";
+            $header_end .= "<th class='center'>" . __('Device', 'karastock') . "</th>";
             $header_end .= "<th class='center'>" . __('Comment') . "</th>";
             echo $header_begin . $header_top . $header_end . "</tr>";
 
@@ -434,11 +465,23 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 : '') . ">" .  self::getTypes(__($data['type'])) . "</td>";
                 echo "<td class='center'>" . $data['model'] . "</td>";
                 echo "<td class='center'>" . $data['cost'] . "</td>";
-                echo "<td class='center'>" . 
-                    ($data['is_withdrawaled'] == 1 ? 
-                        __('Yes at', 'karastock') . ' ' . Html::convDate($data['withdrawal_at'])  :
-                        __('No')) . 
-                    "</td>";
+                echo "<td class='center'>";
+                
+                if($data['is_withdrawaled'] == 1) { 
+                    echo __('Yes at', 'karastock') . ' ' . Html::convDate($data['withdrawal_at']);
+                }
+                else {  
+                    
+                    $loc = new Location(); 
+                    if($data['locations_id'] > 0 
+                        && $loc->getFromDB($data['locations_id'])) {
+
+                        echo __('No, in', 'karastock') . ' ' . $loc->fields['name'];
+                    }
+                    else { echo __('No'); }
+                }
+
+                echo "</td>";
 
                 echo "<td class='center'>";
                 $ticketId = $data['tickets_id'];
@@ -448,6 +491,11 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
                     echo "<a href='". $ticket->getLinkURL() ."'>" . $ticketId . "</a>";
                 }
+                echo "</td>";
+
+                
+                echo "<td class='center'>";
+                self::getDeviceName($data, true);
                 echo "</td>";
 
                 echo "<td class='center'>" . $data['comment'] . "</td>";
@@ -615,13 +663,32 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='headerRow'>";
-        echo "<th colspan='4'>Adding new Item(s)</th></tr>";
+        echo "<th colspan='4'>Editing item</th></tr>";
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item type', 'karastock') . "</label></td><td width='$colsize2%'>";        
-        self::typesDropdown('type', [
+        $randtype = self::typesDropdown("type", [
             'value' => $this->fields['type']
         ]);
+
+        $params = [
+            'type' => '__VALUE__',
+            'device_id' => $this->fields['device_id']
+        ];
+
+        Ajax::updateItemOnSelectEvent(
+            "dropdown_type$randtype",
+            "device_id",
+            "../ajax/orderitem_itemtype_dropdown.php",
+            $params
+        );
+
+        echo "</td>";
+        
+        echo "<td class='left' width='$colsize1%'><label>" . __('Device', 'karastock') . "</label></td><td width='$colsize2%'>";   
+        echo "<span id='device_id'>";
+        self::showDeviceForm($this->fields);
+        echo "</span>";
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -633,10 +700,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Cost', 'karastock') . "</label></td><td width='$colsize2%'>";
         Html::autocompletionTextField($this, 'cost');
-        echo "</td></tr>";
-
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
+        echo "</td>";
+        
         echo "<td class='left' width='$colsize1%'><label>" . __('Ticket') . "</label></td><td width='$colsize2%'>";
         Ticket::dropdown([
             'displaywith' => ['id'],
@@ -656,7 +721,8 @@ class PluginKarastockOrderItem extends CommonDBChild {
         $rand = Dropdown::showYesNo('is_withdrawaled', $this->fields['is_withdrawaled']);
             $params = [
                 'is_withdrawaled' => '__VALUE__',
-                'withdrawal_at' => $this->fields['withdrawal_at']
+                'withdrawal_at' => $this->fields['withdrawal_at'],
+                'locations_id' => $this->fields['locations_id']
             ];
 
             Ajax::updateItemOnSelectEvent(
@@ -670,18 +736,17 @@ class PluginKarastockOrderItem extends CommonDBChild {
             echo "<div id='withdrawal_div'>";
             if ($this->fields['is_withdrawaled']) { 
                 Html::showDateField('withdrawal_at', $opt);
+            }else {
+                Location::dropdown(['value'  => $this->fields['locations_id']]);
             }
             echo "</div>";
 
-        echo "</td></tr>";
-
-        echo "</td></tr>";
-        echo "<tr class='tab_bg_1'>";
+        echo "</td>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Comment') . "</label></td><td width='$colsize2%'>";
         Html::autocompletionTextField($this, 'comment');
         echo "</td></tr>";
 
-        echo "<tr class='tab_bg_1'><td class='center' colspan='2'>";        
+        echo "<tr class='tab_bg_1'><td class='center' colspan='4'>";        
         echo "<input type='hidden' name='id' value='".$this->fields['id']."' />";
         echo "<input type='submit' name='update' value=\"" . _sx('button', 'Edit') . "\" class='submit'>";
         echo "</td></tr>";
@@ -699,6 +764,40 @@ class PluginKarastockOrderItem extends CommonDBChild {
         }
 
         $orderitem->update($_POST);  
+    }
+
+    public static function showDeviceForm($POST) {
+        $itemtype = $POST['type'];
+        $table = getTableForItemType($itemtype);
+        if(class_exists($itemtype) && method_exists(new $itemtype(), 'Dropdown')) {
+            $itemtype::Dropdown([
+                'name' => 'device_id',
+                'value' =>  $POST['device_id']
+            ]);
+        } else {
+            echo __('No GLPI type found for this item type. Set indications in comments or model fields', 'karastock');
+        }
+    }
+
+    public static function getDeviceName($POST, $show = false) {
+        $itemtype = $POST['type'];
+        $table = getTableForItemType($itemtype);
+
+        $result = "";
+
+        if($POST['device_id'] && class_exists($itemtype) && method_exists(new $itemtype(), 'getFromDB')) {
+
+            $obj = new $itemtype();
+            $obj->getFromDB($POST['device_id']);
+
+            $result = $obj->fields['name'];
+        }           
+
+        if(!$show) {
+            return $result;
+        }
+
+        echo $result;
     }
 }
 

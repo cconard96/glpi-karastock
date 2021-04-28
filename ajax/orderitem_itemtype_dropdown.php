@@ -35,7 +35,7 @@
  * --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'], "datetime_dropdown.php")) {
+if (strpos($_SERVER['PHP_SELF'], "orderitem_itemtype_dropdown.php")) {
     $AJAX_INCLUDE = 1;
 
     include("../../../inc/includes.php");
@@ -45,37 +45,12 @@ if (strpos($_SERVER['PHP_SELF'], "datetime_dropdown.php")) {
     Html::header_nocache();
 }
 
-if (array_key_exists('is_received', $_POST) && $_POST['is_received']) {
-    
-    Html::showDateField('received_at', 
-        ['value' => $_POST['received_at']]
-    );
-}
-else if (array_key_exists('is_bill_received', $_POST) && $_POST['is_bill_received']) {
-    
-    Html::showDateField('bill_received_at', 
-        ['value' => $_POST['bill_received_at']]
-    );
+if (array_key_exists('type', $_POST)) {
 
-    echo sprintf(
-        "<input type='text' placeholder='" . __('Bill ID', 'karastok') . "' style='width:95%%; margin-top: 5px;' maxlength=250 name='bill_id' value=\"%1\$s\"/>",
-        $_POST['bill_id']
-    );
-}
-else if (array_key_exists('is_withdrawaled', $_POST)) {
+    Session::checkLoginUser();
+    PluginKarastockOrderItem::showDeviceForm($_POST);
 
-    if($_POST['is_withdrawaled']) {
-    
-        Html::showDateField('withdrawal_at', 
-            [
-                'value' => $_POST['withdrawal_at'],
-                'required' => true
-            ]
-        );
-    }
-    else {
-
-        Location::dropdown(['value'  => $_POST['locations_id']]);
-    }
 }
 else { echo ''; }
+
+Html::ajaxFooter();
