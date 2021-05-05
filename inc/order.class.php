@@ -277,10 +277,12 @@ class PluginKarastockOrder extends CommonDBTM {
             'massiveaction' => false
         ];
 
+        /*
         $tab = array_merge(
             $tab,
-            //PluginKarastockOrderItem::rawSearchOptionsToAdd()
+            PluginKarastockOrderItem::rawSearchOptionsToAdd()
         );
+        */
 
         return $tab;
     }
