@@ -275,7 +275,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
         ];
 
         $tab[] = [
-            'id' => '7',
+            'id' => '9',
             'table' => $this->getTable(),
             'field' => 'locations_id',
             'name' => __('Location'),
