@@ -1,0 +1,153 @@
+# Spanish translations for karastock.
+# Copyright (C) 2021 Iñigo Cabrera Sánchez <icabrera@arkulagunak.com>
+# This file is distributed under the same license as the karastock.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Karastock\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-15 22:24+0200\n"
+"PO-Revision-Date: 2021-06-15 11:46+0200\n"
+"Last-Translator: \n"
+"Language-Team: Iñigo Cabrera Sánchez <icabrera@arkulagunak.com>\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0\n"
+
+#: ajax/datetime_dropdown.php:61 inc/order.class.php:275 inc/order.class.php:448
+msgid "Bill ID"
+msgstr "Ref Factura"
+
+#: front/history.php:50 front/menu.php:42 front/order.form.php:96 front/order.php:41
+#: front/stock.php:50 inc/profile.class.php:113
+msgid "Karastock"
+msgstr "Karastock"
+
+#: front/menu.php:52 inc/history.class.php:185 inc/stock.class.php:135 inc/stock.class.php:187
+#: inc/stock.class.php:247
+msgid "Stock management"
+msgstr "Gestión de Stock"
+
+#: front/menu.php:60
+msgid "Orders"
+msgstr "Pedidos"
+
+#: front/menu.php:69 inc/menu.class.php:74 inc/stock.class.php:74
+msgid "Stock"
+msgstr "Stock"
+
+#: front/menu.php:78 inc/history.class.php:74
+msgid "History"
+msgstr "Historial"
+
+#: inc/history.class.php:126 inc/order.class.php:159 inc/stock.class.php:251
+#: inc/stock.class.php:337
+msgid "Order"
+msgid_plural "Orders"
+msgstr[0] "Pedido"
+msgstr[1] "Pedidos"
+
+#: inc/history.class.php:127 inc/order.class.php:230 inc/order.class.php:388
+msgid "Order date"
+msgstr "Fecha pedido"
+
+#: inc/history.class.php:133 inc/orderitem.class.php:449 inc/orderitem.class.php:688
+msgid "Device"
+msgstr "Dispositivo"
+
+#: inc/history.class.php:136 inc/orderitem.class.php:245
+msgid "Withdrawal at"
+msgstr "Retirado el"
+
+#: inc/history.class.php:137
+msgid "Invoice number"
+msgstr "Número de factura"
+
+#: inc/history.class.php:138
+msgid "Invoice date"
+msgstr "Fecha factura"
+
+#: inc/order.class.php:210 inc/order.class.php:352
+msgid "Order Number"
+msgstr "Número pedido"
+
+#: inc/order.class.php:239
+msgid "Received at"
+msgstr "Recibido el"
+
+#: inc/order.class.php:248 inc/order.class.php:405
+msgid "Received"
+msgstr "Recibido"
+
+#: inc/order.class.php:257
+msgid "Bill received at"
+msgstr "Factura recibida el"
+
+#: inc/order.class.php:266 inc/order.class.php:426
+msgid "Bill received"
+msgstr "Factura recibida"
+
+#: inc/order.class.php:340
+#, php-format
+msgid "%1$s - ID %2$d"
+msgstr "%1$s - ID %2$d"
+
+#: inc/order.class.php:363
+msgid "Other ID"
+msgstr "Otro ID"
+
+#: inc/orderitem.class.php:145
+msgid "Order item"
+msgid_plural "Order items"
+msgstr[0] "Línea de pedido"
+msgstr[1] "Líneas de pedido"
+
+#: inc/orderitem.class.php:235 inc/orderitem.class.php:330 inc/orderitem.class.php:447
+#: inc/orderitem.class.php:720
+msgid "Withdrawal"
+msgstr "Retirada"
+
+#: inc/orderitem.class.php:411
+msgid "Add new items to this Order"
+msgstr "Añade una nueva línea a este pedido"
+
+#: inc/orderitem.class.php:471
+msgid "Yes at"
+msgstr "Sí, en"
+
+#: inc/orderitem.class.php:479
+msgid "No, in"
+msgstr "No, en"
+
+#: inc/orderitem.class.php:600 inc/orderitem.class.php:669
+msgid "Item type"
+msgstr "Tipo"
+
+#: inc/orderitem.class.php:605 inc/orderitem.class.php:695
+msgid "Item Model"
+msgstr "Modelo"
+
+#: inc/orderitem.class.php:613 inc/orderitem.class.php:701
+msgid "Item Cost"
+msgstr "Coste elemento"
+
+#: inc/orderitem.class.php:620
+msgid "Item Count"
+msgstr "Cuenta elemento"
+
+#: inc/orderitem.class.php:778
+msgid "No GLPI type found for this item type. Set indications in comments or model fields"
+msgstr ""
+"No se ha encontrado este tipo de elemento en GLPI. Establecer indicaciones en las notas o modelo "
+"campos"
+
+#: inc/stock.class.php:254
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: setup.php:119
+msgid "Installed / not configured"
+msgstr "Instalado / no configurado"
