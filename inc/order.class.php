@@ -126,12 +126,7 @@ class PluginKarastockOrder extends CommonDBTM {
                 MODIFY COLUMN `received_at` timestamp, 
                 MODIFY COLUMN `bill_received_at` timestamp;";
             
-            $DB->query($query) or die("error updating $table field type DATETIME to TIMESTAMP " . $DB->error());
-
-            $query = "ALTER TABLE `$table` ROW_FORMAT=DYNAMIC;
-                ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
-
-            $DB->query($query) or die("error updating $table collation " . $DB->error());            
+            $DB->query($query) or die("error updating $table field type DATETIME to TIMESTAMP " . $DB->error());          
         }
 
 
