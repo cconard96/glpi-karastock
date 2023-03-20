@@ -70,23 +70,25 @@ class PluginKarastockOrder extends CommonDBTM {
                 `id` int(11) NOT NULL auto_increment,
 
                 `status` int(11) NOT NULL default '1',                
-                `name` varchar(255) collate utf8_unicode_ci default NULL,
+                `name` varchar(255) collate utf8mb4_unicode_ci default NULL,
 
-                `number` varchar(255) collate utf8_unicode_ci default NULL, 
+                `number` varchar(255) collate utf8mb4_unicode_ci default NULL, 
 
-                `other_identifier` varchar(255) collate utf8_unicode_ci default NULL,
-                `date` datetime default NULL,
+                `other_identifier` varchar(255) collate utf8mb4_unicode_ci default NULL,
+                `date` timestamp default NULL,
                 `suppliers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_suppliers (id)',
 
                 `is_received` tinyint(1) default 0,
-                `received_at` datetime default NULL,
+                `received_at` timestamp default NULL,
                 `is_bill_received`  tinyint(1) default 0,
-                `bill_received_at` datetime default NULL,
+                `bill_received_at` timestamp default NULL,
+
+                `comment` varchar(255) collate utf8mb4_unicode_ci default NULL,
                 
                 PRIMARY KEY  (`id`),
                 KEY `status` (`status`),
                 KEY `name` (`name`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
             
@@ -106,10 +108,33 @@ class PluginKarastockOrder extends CommonDBTM {
 
             $migration->displayMessage(sprintf(__("Updating %s"), $table));
             $query = "ALTER TABLE `$table`
-                ADD `bill_id` varchar(255) collate utf8_unicode_ci default NULL;";
+                ADD `bill_id` varchar(255) collate utf8mb4_unicode_ci default NULL;";
             
             $DB->query($query) or die("error updating $table schema " . $DB->error());
         }
+
+        if(!$DB->fieldExists($table, 'comment')) {
+
+            $migration->displayMessage(sprintf(__("Updating %s"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `comment` varchar(255) collate utf8mb4_unicode_ci default NULL;";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
+
+            $query = "ALTER TABLE `$table` 
+                MODIFY COLUMN `date` timestamp, 
+                MODIFY COLUMN `received_at` timestamp, 
+                MODIFY COLUMN `bill_received_at` timestamp;";
+            
+            $DB->query($query) or die("error updating $table field type DATETIME to TIMESTAMP " . $DB->error());
+
+            $query = "ALTER TABLE `$table` ROW_FORMAT=DYNAMIC;
+                ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+
+            $DB->query($query) or die("error updating $table collation " . $DB->error());            
+        }
+
+
 
         return true;
     }

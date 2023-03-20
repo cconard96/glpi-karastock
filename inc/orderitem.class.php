@@ -77,19 +77,19 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 `id` int(11) NOT NULL auto_increment,
                 `".self::$items_id."` int,
                 
-                `type` varchar(255) collate utf8_unicode_ci default NULL,  
-                `model` varchar(255) collate utf8_unicode_ci default NULL, 
-                `cost` varchar(255) collate utf8_unicode_ci default NULL, 
+                `type` varchar(255) collate utf8mb4_unicode_ci default NULL,  
+                `model` varchar(255) collate utf8mb4_unicode_ci default NULL, 
+                `cost` varchar(255) collate utf8mb4_unicode_ci default NULL, 
 
                 `tickets_id` int(11) NOT NULL default 0, 
 
                 `is_withdrawaled`  tinyint(1) default 0,
-                `withdrawal_at` datetime default NULL,
+                `withdrawal_at` timestamp default NULL,
 
-                `comment` varchar(255) collate utf8_unicode_ci default NULL, 
+                `comment` varchar(255) collate utf8mb4_unicode_ci default NULL, 
 
                 PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }        
@@ -110,6 +110,25 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 ADD `device_id` int(11) NOT NULL default '0' COMMENT 'RELATION to devices tables (item_type) (id)'";
             
             $DB->query($query) or die("error updating $table schema " . $DB->error());
+        }
+
+        if(!$DB->fieldExists($table, 'reinvoice')) {
+
+            $migration->displayMessage(sprintf(__("Updating %s"), $table));
+            $query = "ALTER TABLE `$table`
+                ADD `reinvoice` tinyint(1) NOT NULL default 0;";
+            
+            $DB->query($query) or die("error updating $table schema " . $DB->error());
+            
+            $query = "ALTER TABLE `$table` 
+                MODIFY COLUMN `withdrawal_at` timestamp;";
+            
+            $DB->query($query) or die("error updating $table field type DATETIME to TIMESTAMP " . $DB->error());
+
+            $query = "ALTER TABLE `$table` ROW_FORMAT=DYNAMIC;
+                ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+
+            $DB->query($query) or die("error updating $table collation " . $DB->error());             
         }
     }
 
