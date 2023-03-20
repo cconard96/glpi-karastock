@@ -603,17 +603,14 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Model', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField($item, 'model', [
-            'rand' => $rand
-        ]);
+        echo Html::input('model', [ 'value' => '' ]);
         echo "</td></tr>";
 
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Cost', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField($item, 'cost', [
-            'rand' => $rand
-        ]);
+        echo Html::input('cost', [ 'value' => '' ]);
+
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -693,13 +690,21 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Model', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField($this, 'model');
+        echo Html::input('model', 
+                [
+                    'value' => $this->fields['model']
+                ]
+            );
         echo "</td></tr>";
 
         echo "</td></tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Item Cost', 'karastock') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField($this, 'cost');
+        echo Html::input('cost', 
+                [
+                    'value' => $this->fields['cost']
+                ]
+            );
         echo "</td>";
         
         echo "<td class='left' width='$colsize1%'><label>" . __('Ticket') . "</label></td><td width='$colsize2%'>";
@@ -743,7 +748,11 @@ class PluginKarastockOrderItem extends CommonDBChild {
 
         echo "</td>";
         echo "<td class='left' width='$colsize1%'><label>" . __('Comment') . "</label></td><td width='$colsize2%'>";
-        Html::autocompletionTextField($this, 'comment');
+        echo Html::input('comment', 
+                [
+                    'value' => $this->fields['comment']
+                ]
+            );
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'><td class='center' colspan='4'>";        
