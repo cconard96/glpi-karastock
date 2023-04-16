@@ -218,20 +218,6 @@ class PluginKarastockProfile extends Profile {
     public static function initProfile() {
         global $DB;
 
-        $profile = new self();
-  
-        //Add new rights in glpi_profilerights table
-        foreach ($profile->getAllRights() as $data) {
-
-            if (countElementsInTable(
-                "glpi_profilerights",
-                "`name` = '" . $data['field'] . "'"
-            ) == 0) {
-
-                //ProfileRight::addProfileRights([$data['field']]);
-            }
-        }
-
         $profiles = $DB->request("SELECT *
             FROM `glpi_profilerights`
             WHERE `profiles_id`='" . $_SESSION['glpiactiveprofile']['id'] . "'
