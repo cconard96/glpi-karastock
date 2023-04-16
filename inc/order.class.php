@@ -75,13 +75,13 @@ class PluginKarastockOrder extends CommonDBTM {
                 `number` varchar(255) collate utf8mb4_unicode_ci default NULL, 
 
                 `other_identifier` varchar(255) collate utf8mb4_unicode_ci default NULL,
-                `date` timestamp default NULL,
+                `date` timestamp NULL default NULL,
                 `suppliers_id` int(11) NOT NULL default '0' COMMENT 'RELATION to glpi_suppliers (id)',
 
                 `is_received` tinyint(1) default 0,
-                `received_at` timestamp default NULL,
+                `received_at` timestamp NULL default NULL,
                 `is_bill_received`  tinyint(1) default 0,
-                `bill_received_at` timestamp default NULL,
+                `bill_received_at` timestamp NULL default NULL,
 
                 `comment` varchar(255) collate utf8mb4_unicode_ci default NULL,
                 

@@ -84,7 +84,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 `tickets_id` int(11) NOT NULL default 0, 
 
                 `is_withdrawaled`  tinyint(1) default 0,
-                `withdrawal_at` timestamp default NULL,
+                `withdrawal_at` timestamp NULL default NULL,
 
                 `comment` varchar(255) collate utf8mb4_unicode_ci default NULL, 
 
