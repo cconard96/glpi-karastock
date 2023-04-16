@@ -88,7 +88,7 @@ class PluginKarastockOrder extends CommonDBTM {
                 PRIMARY KEY  (`id`),
                 KEY `status` (`status`),
                 KEY `name` (`name`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
             

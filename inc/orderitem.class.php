@@ -89,7 +89,7 @@ class PluginKarastockOrderItem extends CommonDBChild {
                 `comment` varchar(255) collate utf8mb4_unicode_ci default NULL, 
 
                 PRIMARY KEY  (`id`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8mb4_unicode_ci";
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
             $DB->query($query) or die("error creating $table " . $DB->error());
         }        
